@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omni-Dimensional Unit Converter - Infinite Edition</title>
+    <style>
+        /* --- 2015 BOOTSTRAP-STYLE UI --- */
+        body { 
+            background-color: #f1f2f6; 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            color: #333333; 
+            margin: 0; 
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container { 
+            background-color: #ffffff; 
+            border: 1px solid #dddddd; 
+            border-radius: 6px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,.1); 
+            padding: 40px; 
+            width: 100%;
+            max-width: 950px; 
+        }
+        
+        h3 { 
+            margin-top: 0; 
+            font-size: 32px; 
+            font-weight: 500; 
+            border-bottom: 2px solid #eeeeee; 
+            padding-bottom: 15px; 
+            margin-bottom: 15px; 
+            color: #222222;
+        }
+        
+        .help-block { 
+            display: block; 
+            margin-bottom: 30px; 
+            color: #737373; 
+            font-size: 15px; 
+            line-height: 1.6;
+        }
+
+        .row { 
+            display: flex; 
+            gap: 20px; 
+            margin-bottom: 25px; 
+            align-items: flex-end; 
+        }
+        
+        .col { 
+            flex: 1; 
+        }
+
+        label { 
+            display: inline-block; 
+            margin-bottom: 8px; 
+            font-weight: 700; 
+            font-size: 14px; 
+            color: #333333;
+        }
+        
+        .form-control { 
+            display: block; 
+            width: 100%; 
+            height: 48px; 
+            padding: 10px 16px; 
+            font-size: 16px; 
+            color: #555555; 
+            background-color: #ffffff; 
+            border: 1px solid #cccccc; 
+            border-radius: 4px; 
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.075); 
+            box-sizing: border-box; 
+            font-family: inherit; 
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        select.form-control { 
+            -webkit-appearance: none; 
+            background-image: linear-gradient(45deg, transparent 50%, #999 50%), linear-gradient(135deg, #999 50%, transparent 50%); 
+            background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px); 
+            background-size: 5px 5px, 5px 5px; 
+            background-repeat: no-repeat; 
+            cursor: pointer;
+        }
+        
+        .form-control:focus { 
+            border-color: #66afe9; 
+            outline: 0; 
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6); 
+        }
+
+        .panel { 
+            background-color: #f9f9f9; 
+            border: 1px solid #bce8f1; 
+            border-radius: 6px; 
+            padding: 35px; 
+            margin-top: 30px; 
+            font-family: Menlo, Monaco, Consolas, "Courier New", monospace; 
+            font-size: 22px; 
+            color: #31708f; 
+            word-break: break-word; 
+            position: relative; 
+            line-height: 1.6; 
+            text-align: center;
+            background-color: #e9f5ff;
+        }
+
+        .warning-text { 
+            color: #d9534f; 
+            font-size: 14px; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            display: block; 
+            border-top: 1px dashed #d9534f; 
+            padding-top: 15px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+        }
+        
+        .bridge-text {
+            font-size: 14px; 
+            color: #777; 
+            margin-top: 10px;
+            display: block;
+            font-style: italic;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h3>Omni-Dimensional Converter</h3>
+        <span class="help-block">
+            A hyper-advanced physics engine capable of infinite cross-dimensional bridging. Converts standard units and complex real-world entities across 9 physical dimensions.
+        </span>
+        
+        <div class="row">
+            <div class="col" style="flex: 0.3;">
+                <label>Input Value</label>
+                <input type="number" id="omniValue" class="form-control" value="1" oninput="runOmniConversion()">
+            </div>
+            <div class="col">
+                <label>Entity / Unit A</label>
+                <select id="omniFrom" class="form-control" onchange="runOmniConversion()"></select>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col" style="flex: 0.3; text-align: center; font-size: 24px; font-weight: bold; color: #999;">
+                &rarr;
+            </div>
+            <div class="col">
+                <label>Entity / Unit B</label>
+                <select id="omniTo" class="form-control" onchange="runOmniConversion()"></select>
+            </div>
+        </div>
+        
+        <div class="panel" id="omniResult">
+            Awaiting Input...
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           OMNI-DIMENSIONAL UNIT & ENTITY DATABASE
+           ========================================================================== */
+           
+        // DIMENSION KEYS: 
+        // l = Length (Meters), m = Mass (Kilograms), t = Time (Seconds)
+        // s = Speed (Meters/Sec), v = Volume (Liters), data = Data (Megabytes)
+        // e = Energy (Joules), a = Area (Sq Meters), p = Pressure (Pascals)
+        // c: "u" = Standard Unit, c: "e" = Real-World Entity
+
+        const omniDB = {
+            // ----------------------------------------------------------------------
+            // STANDARD UNITS (Strict mathematical conversions to Base 1)
+            // ----------------------------------------------------------------------
+            
+            // Length (Base: 1 Meter)
+            "Meters": { c: "u", d: "l", val: 1 },
+            "Centimeters": { c: "u", d: "l", val: 0.01 },
+            "Millimeters": { c: "u", d: "l", val: 0.001 },
+            "Micrometers": { c: "u", d: "l", val: 1e-6 },
+            "Nanometers": { c: "u", d: "l", val: 1e-9 },
+            "Picometers": { c: "u", d: "l", val: 1e-12 },
+            "Femtometers": { c: "u", d: "l", val: 1e-15 },
+            "Planck Lengths": { c: "u", d: "l", val: 1.616e-35 },
+            "Kilometers": { c: "u", d: "l", val: 1000 },
+            "Megameters": { c: "u", d: "l", val: 1e6 },
+            "Gigameters": { c: "u", d: "l", val: 1e9 },
+            "Inches": { c: "u", d: "l", val: 0.0254 },
+            "Feet": { c: "u", d: "l", val: 0.3048 },
+            "Yards": { c: "u", d: "l", val: 0.9144 },
+            "Miles": { c: "u", d: "l", val: 1609.34 },
+            "Nautical Miles": { c: "u", d: "l", val: 1852 },
+            "Light Years": { c: "u", d: "l", val: 9.461e15 },
+            "Light Days": { c: "u", d: "l", val: 2.592e13 },
+            "Light Hours": { c: "u", d: "l", val: 1.08e12 },
+            "Light Minutes": { c: "u", d: "l", val: 1.8e10 },
+            "Light Seconds": { c: "u", d: "l", val: 299792458 },
+            "Astronomical Units (AU)": { c: "u", d: "l", val: 1.496e11 },
+            "Parsecs": { c: "u", d: "l", val: 3.086e16 },
+            "Kiloparsecs": { c: "u", d: "l", val: 3.086e19 },
+            "Megaparsecs": { c: "u", d: "l", val: 3.086e22 },
+            "Fathoms": { c: "u", d: "l", val: 1.8288 },
+            "Cables": { c: "u", d: "l", val: 20.1168 },
+            "Chains (Surveyor)": { c: "u", d: "l", val: 20.1168 },
+            "Links (Surveyor)": { c: "u", d: "l", val: 0.201168 },
+            "Rods": { c: "u", d: "l", val: 5.0292 },
+            "Poles": { c: "u", d: "l", val: 5.0292 },
+            "Perches": { c: "u", d: "l", val: 5.0292 },
+            "Furlongs": { c: "u", d: "l", val: 201.168 },
+            "Leagues": { c: "u", d: "l", val: 4828.03 },
+            "Cubits (Ancient)": { c: "u", d: "l", val: 0.4572 },
+            "Cubits (Egyptian Royal)": { c: "u", d: "l", val: 0.5235 },
+            "Spans": { c: "u", d: "l", val: 0.2286 },
+            "Hands (Equine)": { c: "u", d: "l", val: 0.1016 },
+            "Fingers": { c: "u", d: "l", val: 0.1143 },
+            "Nails": { c: "u", d: "l", val: 0.05715 },
+            "Barleycorns": { c: "u", d: "l", val: 0.00846 },
+            "Mils": { c: "u", d: "l", val: 0.0000254 },
+            "Microinches": { c: "u", d: "l", val: 2.54e-8 },
+            "Twips": { c: "u", d: "l", val: 0.0000176389 },
+            "Smoots": { c: "u", d: "l", val: 1.7018 },
+            "Bohr Radii": { c: "u", d: "l", val: 5.291e-11 },
+            "Fermi": { c: "u", d: "l", val: 1e-15 },
+            "Angstroms": { c: "u", d: "l", val: 1e-10 },
+            "Pixels (Standard 96dpi)": { c: "u", d: "l", val: 0.00026458 },
+            "Points (Typography)": { c: "u", d: "l", val: 0.0003527 },
+            "Picas (Typography)": { c: "u", d: "l", val: 0.0042333 },
+            "Ciceros (Typography)": { c: "u", d: "l", val: 0.004511 },
+            "Agates (Typography)": { c: "u", d: "l", val: 0.001812 },
+
+            // Mass (Base: 1 Kilogram)
+            "Kilograms": { c: "u", d: "m", val: 1 },
+            "Grams": { c: "u", d: "m", val: 0.001 },
+            "Milligrams": { c: "u", d: "m", val: 1e-6 },
+            "Micrograms": { c: "u", d: "m", val: 1e-9 },
+            "Nanograms": { c: "u", d: "m", val: 1e-12 },
+            "Metric Tons (Tonnes)": { c: "u", d: "m", val: 1000 },
+            "Megatonnes": { c: "u", d: "m", val: 1e9 },
+            "Gigatonnes": { c: "u", d: "m", val: 1e12 },
+            "Pounds": { c: "u", d: "m", val: 0.453592 },
+            "Ounces": { c: "u", d: "m", val: 0.0283495 },
+            "Stones": { c: "u", d: "m", val: 6.35029 },
+            "US Tons (Short Tons)": { c: "u", d: "m", val: 907.185 },
+            "Imperial Tons (Long Tons)": { c: "u", d: "m", val: 1016.05 },
+            "Carats": { c: "u", d: "m", val: 0.0002 },
+            "Slugs": { c: "u", d: "m", val: 14.5939 },
+            "Troy Ounces": { c: "u", d: "m", val: 0.0311035 },
+            "Troy Pounds": { c: "u", d: "m", val: 0.373242 },
+            "Pennyweights": { c: "u", d: "m", val: 0.00155517 },
+            "Grains": { c: "u", d: "m", val: 0.0000647989 },
+            "Drams": { c: "u", d: "m", val: 0.00177185 },
+            "Hundredweights (US)": { c: "u", d: "m", val: 45.3592 },
+            "Hundredweights (Imperial)": { c: "u", d: "m", val: 50.8023 },
+            "Quarter (US)": { c: "u", d: "m", val: 11.3398 },
+            "Quarter (Imperial)": { c: "u", d: "m", val: 12.7006 },
+            "Daltons (Atomic Mass)": { c: "u", d: "m", val: 1.660539e-27 },
+            "Planck Masses": { c: "u", d: "m", val: 2.176e-8 },
+            "Solar Masses": { c: "u", d: "m", val: 1.989e30 },
+            "Jupiter Masses": { c: "u", d: "m", val: 1.898e27 },
+            "Earth Masses": { c: "u", d: "m", val: 5.972e24 },
+            "Lunar Masses": { c: "u", d: "m", val: 7.342e22 },
+            "Mars Masses": { c: "u", d: "m", val: 6.39e23 },
+            "Venus Masses": { c: "u", d: "m", val: 4.867e24 },
+
+            // Time (Base: 1 Second)
+            "Seconds": { c: "u", d: "t", val: 1 },
+            "Milliseconds": { c: "u", d: "t", val: 0.001 },
+            "Microseconds": { c: "u", d: "t", val: 1e-6 },
+            "Nanoseconds": { c: "u", d: "t", val: 1e-9 },
+            "Picoseconds": { c: "u", d: "t", val: 1e-12 },
+            "Femtoseconds": { c: "u", d: "t", val: 1e-15 },
+            "Minutes": { c: "u", d: "t", val: 60 },
+            "Hours": { c: "u", d: "t", val: 3600 },
+            "Days": { c: "u", d: "t", val: 86400 },
+            "Weeks": { c: "u", d: "t", val: 604800 },
+            "Fortnights": { c: "u", d: "t", val: 1209600 },
+            "Months (Average)": { c: "u", d: "t", val: 2629800 },
+            "Months (Lunar/Synodic)": { c: "u", d: "t", val: 2551443 },
+            "Years (365 Days)": { c: "u", d: "t", val: 31536000 },
+            "Years (Leap 366)": { c: "u", d: "t", val: 31622400 },
+            "Years (Julian)": { c: "u", d: "t", val: 31557600 },
+            "Years (Gregorian)": { c: "u", d: "t", val: 31556952 },
+            "Decades": { c: "u", d: "t", val: 315360000 },
+            "Centuries": { c: "u", d: "t", val: 3153600000 },
+            "Millennia": { c: "u", d: "t", val: 31536000000 },
+            "Galactic Years": { c: "u", d: "t", val: 7.098e15 },
+            "Planck Time": { c: "u", d: "t", val: 5.39e-44 },
+            "Microcenturies": { c: "u", d: "t", val: 3153.6 },
+            "Jiffies (Physics)": { c: "u", d: "t", val: 3e-24 },
+            "Jiffies (Electronics)": { c: "u", d: "t", val: 0.01666 },
+            "Svedbergs": { c: "u", d: "t", val: 1e-13 },
+            "Keats": { c: "u", d: "t", val: 1 }, 
+            "Moments (Medieval)": { c: "u", d: "t", val: 90 },
+
+            // Speed (Base: 1 m/s)
+            "Meters per second": { c: "u", d: "s", val: 1 },
+            "Kilometers per hour": { c: "u", d: "s", val: 0.277778 },
+            "Kilometers per second": { c: "u", d: "s", val: 1000 },
+            "Miles per hour": { c: "u", d: "s", val: 0.44704 },
+            "Miles per second": { c: "u", d: "s", val: 1609.34 },
+            "Knots": { c: "u", d: "s", val: 0.514444 },
+            "Feet per second": { c: "u", d: "s", val: 0.3048 },
+            "Feet per minute": { c: "u", d: "s", val: 0.00508 },
+            "Inches per second": { c: "u", d: "s", val: 0.0254 },
+            "Mach (Standard Sea Level)": { c: "u", d: "s", val: 343 },
+            "Speed of Light (Vacuum)": { c: "u", d: "s", val: 299792458 },
+            "Speed of Sound (Sea Level)": { c: "u", d: "s", val: 340.29 },
+
+            // Volume (Base: 1 Liter)
+            "Liters": { c: "u", d: "v", val: 1 },
+            "Milliliters": { c: "u", d: "v", val: 0.001 },
+            "Microliters": { c: "u", d: "v", val: 1e-6 },
+            "Deciliters": { c: "u", d: "v", val: 0.1 },
+            "Hectoliters": { c: "u", d: "v", val: 100 },
+            "Kiloliters": { c: "u", d: "v", val: 1000 },
+            "Megaliters": { c: "u", d: "v", val: 1e6 },
+            "Cubic Meters": { c: "u", d: "v", val: 1000 },
+            "Cubic Centimeters (cc)": { c: "u", d: "v", val: 0.001 },
+            "Cubic Millimeters": { c: "u", d: "v", val: 1e-6 },
+            "Cubic Inches": { c: "u", d: "v", val: 0.0163871 },
+            "Cubic Feet": { c: "u", d: "v", val: 28.3168 },
+            "Cubic Yards": { c: "u", d: "v", val: 764.555 },
+            "Cubic Miles": { c: "u", d: "v", val: 4.168e12 },
+            "Gallons (US Liquid)": { c: "u", d: "v", val: 3.78541 },
+            "Gallons (US Dry)": { c: "u", d: "v", val: 4.40488 },
+            "Gallons (Imperial)": { c: "u", d: "v", val: 4.54609 },
+            "Quarts (US Liquid)": { c: "u", d: "v", val: 0.946353 },
+            "Pints (US Liquid)": { c: "u", d: "v", val: 0.473176 },
+            "Cups (US Legal)": { c: "u", d: "v", val: 0.24 },
+            "Cups (US Customary)": { c: "u", d: "v", val: 0.236588 },
+            "Cups (Metric)": { c: "u", d: "v", val: 0.25 },
+            "Fluid Ounces (US)": { c: "u", d: "v", val: 0.0295735 },
+            "Fluid Ounces (Imperial)": { c: "u", d: "v", val: 0.0284131 },
+            "Tablespoons (US)": { c: "u", d: "v", val: 0.0147868 },
+            "Tablespoons (Metric)": { c: "u", d: "v", val: 0.015 },
+            "Teaspoons (US)": { c: "u", d: "v", val: 0.00492892 },
+            "Teaspoons (Metric)": { c: "u", d: "v", val: 0.005 },
+            "Drops (Medical)": { c: "u", d: "v", val: 0.00005 },
+            "Dashes (Cooking)": { c: "u", d: "v", val: 0.0003125 },
+            "Pinches (Cooking)": { c: "u", d: "v", val: 0.000625 },
+            "Smidgens (Cooking)": { c: "u", d: "v", val: 0.000156 },
+            "Nips (Cooking)": { c: "u", d: "v", val: 0.000078 },
+            "Oil Barrels": { c: "u", d: "v", val: 158.987 },
+            "Beer Barrels (US)": { c: "u", d: "v", val: 117.348 },
+            "Beer Barrels (UK)": { c: "u", d: "v", val: 163.659 },
+            "Bushels (US)": { c: "u", d: "v", val: 35.2391 },
+            "Bushels (Imperial)": { c: "u", d: "v", val: 36.3687 },
+            "Pecks (US)": { c: "u", d: "v", val: 8.80977 },
+            "Pecks (Imperial)": { c: "u", d: "v", val: 9.09218 },
+            "Firkins": { c: "u", d: "v", val: 40.9148 },
+            "Kilderkins": { c: "u", d: "v", val: 81.8296 },
+            "Hogsheads": { c: "u", d: "v", val: 238.481 },
+            "Butts (Volume)": { c: "u", d: "v", val: 476.962 },
+            "Tuns": { c: "u", d: "v", val: 953.924 },
+            "Cords (Firewood)": { c: "u", d: "v", val: 3624.56 },
+            "Board Feet": { c: "u", d: "v", val: 2.35974 },
+
+            // Data (Base: 1 Megabyte)
+            "Megabytes (MB)": { c: "u", d: "data", val: 1 },
+            "Mebibytes (MiB)": { c: "u", d: "data", val: 1.048576 },
+            "Bytes": { c: "u", d: "data", val: 1e-6 },
+            "Kilobytes (KB)": { c: "u", d: "data", val: 0.001 },
+            "Kibibytes (KiB)": { c: "u", d: "data", val: 0.001024 },
+            "Gigabytes (GB)": { c: "u", d: "data", val: 1000 },
+            "Gibibytes (GiB)": { c: "u", d: "data", val: 1073.74 },
+            "Terabytes (TB)": { c: "u", d: "data", val: 1e6 },
+            "Tebibytes (TiB)": { c: "u", d: "data", val: 1.09951e6 },
+            "Petabytes (PB)": { c: "u", d: "data", val: 1e9 },
+            "Pebibytes (PiB)": { c: "u", d: "data", val: 1.1259e9 },
+            "Exabytes (EB)": { c: "u", d: "data", val: 1e12 },
+            "Zettabytes (ZB)": { c: "u", d: "data", val: 1e15 },
+            "Yottabytes (YB)": { c: "u", d: "data", val: 1e18 },
+            "Ronnabytes (RB)": { c: "u", d: "data", val: 1e21 },
+            "Quettabytes (QB)": { c: "u", d: "data", val: 1e24 },
+            "Bits": { c: "u", d: "data", val: 1.25e-7 },
+            "Kilobits (Kb)": { c: "u", d: "data", val: 0.000125 },
+            "Megabits (Mb)": { c: "u", d: "data", val: 0.125 },
+            "Gigabits (Gb)": { c: "u", d: "data", val: 125 },
+            "Terabits (Tb)": { c: "u", d: "data", val: 125000 },
+            "Nibbles": { c: "u", d: "data", val: 5e-7 },
+
+            // Area (Base: 1 Sq Meter)
+            "Sq Meters": { c: "u", d: "a", val: 1 },
+            "Sq Kilometers": { c: "u", d: "a", val: 1e6 },
+            "Sq Centimeters": { c: "u", d: "a", val: 0.0001 },
+            "Sq Millimeters": { c: "u", d: "a", val: 1e-6 },
+            "Sq Micrometers": { c: "u", d: "a", val: 1e-12 },
+            "Sq Inches": { c: "u", d: "a", val: 0.00064516 },
+            "Sq Feet": { c: "u", d: "a", val: 0.092903 },
+            "Sq Yards": { c: "u", d: "a", val: 0.836127 },
+            "Sq Miles": { c: "u", d: "a", val: 2589988 },
+            "Acres": { c: "u", d: "a", val: 4046.86 },
+            "Hectares": { c: "u", d: "a", val: 10000 },
+            "Ares": { c: "u", d: "a", val: 100 },
+            "Barns (Physics)": { c: "u", d: "a", val: 1e-28 },
+            "Outhouses (Physics)": { c: "u", d: "a", val: 1e-34 },
+            "Sheds (Physics)": { c: "u", d: "a", val: 1e-52 },
+            "Townships (US Survey)": { c: "u", d: "a", val: 9.324e7 },
+            "Ping (Taiwanese Area)": { c: "u", d: "a", val: 3.3058 },
+            "Tsubo (Taiwanese Area)": { c: "u", d: "a", val: 3.3058 },
+            "Tatami Mats": { c: "u", d: "a", val: 1.65289 },
+            
+            // Energy (Base: 1 Joule)
+            "Joules": { c: "u", d: "e", val: 1 },
+            "Kilojoules": { c: "u", d: "e", val: 1000 },
+            "Megajoules": { c: "u", d: "e", val: 1e6 },
+            "Gigajoules": { c: "u", d: "e", val: 1e9 },
+            "Calories (Science)": { c: "u", d: "e", val: 4.184 },
+            "Kilocalories (Food Calories)": { c: "u", d: "e", val: 4184 },
+            "Watt-hours": { c: "u", d: "e", val: 3600 },
+            "Kilowatt-hours": { c: "u", d: "e", val: 3.6e6 },
+            "Megawatt-hours": { c: "u", d: "e", val: 3.9e9 },
+            "Gigawatt-hours": { c: "u", d: "e", val: 3.6e12 },
+            "Electronvolts": { c: "u", d: "e", val: 1.602e-19 },
+            "British Thermal Units (BTU)": { c: "u", d: "e", val: 1055.06 },
+            "Therms (US)": { c: "u", d: "e", val: 1.055e8 },
+            "Foot-Pounds": { c: "u", d: "e", val: 1.35582 },
+            "Ergs": { c: "u", d: "e", val: 1e-7 },
+            "Hartrees": { c: "u", d: "e", val: 4.359e-18 },
+            "Tons of TNT Equivalent": { c: "u", d: "e", val: 4.184e9 },
+            "Kilotons of TNT": { c: "u", d: "e", val: 4.184e12 },
+            "Megatons of TNT": { c: "u", d: "e", val: 4.184e15 },
+
+            // Pressure (Base: 1 Pascal)
+            "Pascals": { c: "u", d: "p", val: 1 },
+            "Hectopascals": { c: "u", d: "p", val: 100 },
+            "Kilopascals": { c: "u", d: "p", val: 1000 },
+            "Megapascals": { c: "u", d: "p", val: 1e6 },
+            "Bars (Pressure)": { c: "u", d: "p", val: 100000 },
+            "Millibars": { c: "u", d: "p", val: 100 },
+            "PSI (Pounds per Sq Inch)": { c: "u", d: "p", val: 6894.76 },
+            "Atmospheres (Standard)": { c: "u", d: "p", val: 101325 },
+            "Atmospheres (Technical)": { c: "u", d: "p", val: 98066.5 },
+            "Torr (mmHg)": { c: "u", d: "p", val: 133.322 },
+            "Inches of Mercury (inHg)": { c: "u", d: "p", val: 3386.39 },
+            "Inches of Water (inH2O)": { c: "u", d: "p", val: 249.082 },
+
+            // ----------------------------------------------------------------------
+            // REAL-WORLD ENTITIES (Massively Expanded Multi-dimensional scaling)
+            // Units: l(m), m(kg), s(m/s), v(Liters), t(sec), data(MB), e(Joules), a(m^2), p(Pa)
+            // Note: ALL entities now have values for ALL dimensions to enable universal comparison. 
+            // ----------------------------------------------------------------------
+            
+            // Architecture & Landmarks
+            "Titanic Ship": { c: "e", l: 269, m: 4.76e7, s: 12.08, v: 1.3e8, t: 3.15e7, data: 1.5e6, e: 4e11, a: 9000, p: 101325 },
+            "Eiffel Tower": { c: "e", l: 330, m: 1.01e7, s: 0, v: 8.5e6, t: 4.2e9, data: 500, e: 5.1e10, a: 15625, p: 101325 },
+            "Burj Khalifa": { c: "e", l: 828, m: 5e8, s: 0, v: 3.3e8, t: 3.1e9, data: 20000, e: 1.6e12, a: 309473, p: 101325 },
+            "Empire State Building": { c: "e", l: 381, m: 3.3e8, s: 0, v: 1.04e9, t: 2.9e9, data: 10000, e: 6.2e11, a: 208879, p: 101325 },
+            "Mount Everest": { c: "e", l: 8848, m: 1.6e14, s: 0, v: 5.5e13, t: 1.5e15, data: 1e12, e: 6.9e18, a: 4.5e9, p: 33700 },
+            "Great Pyramid of Giza": { c: "e", l: 138.8, m: 6e9, s: 0, v: 2.58e9, t: 1.4e11, data: 800, e: 4.1e12, a: 52900, p: 101325 },
+            "Football Field (US)": { c: "e", l: 109.7, m: 1.5e6, s: 0, v: 5.35e6, t: 1.5e9, data: 10, e: 0, a: 5351.21, p: 101325 },
+            "Statue of Liberty": { c: "e", l: 93, m: 2.04e5, s: 0, v: 1.5e6, t: 4.2e9, data: 300, e: 8.5e10, a: 2500, p: 101325 },
+            "Leaning Tower of Pisa": { c: "e", l: 56.67, m: 1.45e7, s: 0, v: 1.2e6, t: 2.1e10, data: 200, e: 3.2e10, a: 4000, p: 101325 },
+            "Space Needle": { c: "e", l: 184, m: 8.66e6, s: 0, v: 2.1e6, t: 1.9e9, data: 1500, e: 4.5e10, a: 8000, p: 101325 },
+            "Grand Canyon": { c: "e", l: 446000, m: 1.2e15, s: 0, v: 4.1e15, t: 1.8e14, data: 1e14, e: 0, a: 4.9e9, p: 101325 },
+            "Great Wall of China": { c: "e", l: 21196000, m: 5.2e10, s: 0, v: 3.4e10, t: 6.3e10, data: 5e6, e: 0, a: 1.2e8, p: 101325 },
+            "Taj Mahal": { c: "e", l: 73, m: 1e8, s: 0, v: 5e7, t: 1.2e10, data: 1000, e: 1e10, a: 170000, p: 101325 },
+            "Stonehenge": { c: "e", l: 33, m: 1.5e6, s: 0, v: 5e5, t: 1.5e11, data: 10, e: 0, a: 850, p: 101325 },
+            "Golden Gate Bridge": { c: "e", l: 2737, m: 8.04e8, s: 0, v: 1e8, t: 2.5e9, data: 5000, e: 1e11, a: 75000, p: 101325 },
+            
+            // Fictional / Sci-Fi Entities
+            "The Death Star (Star Wars)": { c: "e", l: 120000, m: 1e15, s: 3e8, v: 9e14, t: 1e8, data: 1e20, e: 1e32, a: 4.5e10, p: 101325 },
+            "Millennium Falcon": { c: "e", l: 34.75, m: 1e5, s: 3e8, v: 5000, t: 1e9, data: 1e10, e: 1e15, a: 1000, p: 101325 },
+            "USS Enterprise (NCC-1701-D)": { c: "e", l: 642, m: 4.5e9, s: 3e8, v: 1e8, t: 3e9, data: 1e15, e: 1e20, a: 2e5, p: 101325 },
+            "TARDIS (Doctor Who)": { c: "e", l: 1.3, m: 3000, s: 3e8, v: 1e15, t: 1e15, data: 1e25, e: 1e30, a: 5, p: 101325 },
+
+            // Vehicles & Tech
+            "Boeing 747": { c: "e", l: 70.6, m: 183500, s: 255, v: 876000, t: 9.4e8, data: 5000, e: 1.4e10, a: 511, p: 101325 },
+            "Space Shuttle": { c: "e", l: 37.2, m: 2.03e6, s: 7850, v: 4.5e6, t: 9.4e8, data: 10240, e: 3.3e13, a: 250, p: 0 },
+            "Saturn V Rocket": { c: "e", l: 110.6, m: 2.97e6, s: 2777, v: 5e6, t: 1.5e8, data: 2.5, e: 1.4e13, a: 400, p: 0 },
+            "Tesla Model 3": { c: "e", l: 4.69, m: 1611, s: 61, v: 2800, t: 4.7e8, data: 64000, e: 2.16e8, a: 8.6, p: 101325 },
+            "Bugatti Chiron": { c: "e", l: 4.54, m: 1996, s: 118, v: 2600, t: 6.3e8, data: 32000, e: 2.8e8, a: 9.2, p: 101325 },
+            "Fully Loaded Semi-Truck": { c: "e", l: 21.9, m: 36000, s: 33.5, v: 65000, t: 4.7e8, data: 100, e: 2.0e7, a: 53.5, p: 101325 },
+            "Standard CD-ROM": { c: "e", l: 0.12, m: 0.015, s: 1.2, v: 0.013, t: 1.5e9, data: 700, e: 0.5, a: 0.011, p: 101325 },
+            "Standard Blu-Ray": { c: "e", l: 0.12, m: 0.015, s: 5.0, v: 0.013, t: 1.5e9, data: 25000, e: 0.5, a: 0.011, p: 101325 },
+            "Standard iPhone 15": { c: "e", l: 0.147, m: 0.171, s: 0, v: 0.08, t: 1.2e8, data: 128000, e: 46000, a: 0.01, p: 101325 },
+            "A Standard Brick": { c: "e", l: 0.203, m: 2.26, s: 0, v: 1.13, t: 1.5e10, data: 0, e: 450, a: 0.046, p: 101325 },
+            "Double-Decker Bus": { c: "e", l: 8.38, m: 12500, s: 22.3, v: 80000, t: 4.7e8, data: 50, e: 1.5e7, a: 21, p: 101325 },
+            "School Bus": { c: "e", l: 13.7, m: 11000, s: 24.5, v: 75000, t: 3.8e8, data: 20, e: 1.2e7, a: 34, p: 101325 },
+            "Standard Car": { c: "e", l: 4.5, m: 1400, s: 30, v: 2500, t: 3.8e8, data: 500, e: 1.8e8, a: 8, p: 101325 },
+            "International Space Station": { c: "e", l: 109, m: 419725, s: 7660, v: 915600, t: 9.4e8, data: 5e6, e: 1.5e12, a: 4000, p: 0 },
+            "Standard Washing Machine": { c: "e", l: 0.85, m: 70, s: 0.1, v: 100, t: 3e8, data: 1, e: 5e6, a: 3, p: 101325 },
+            
+            // Biological & Living
+            "Danny DeVito": { c: "e", l: 1.47, m: 88, s: 3.5, v: 85, t: 2.5e9, data: 1500, e: 3.7e7, a: 1.8, p: 101325 },
+            "Average Adult Human Male": { c: "e", l: 1.75, m: 85, s: 5.5, v: 80, t: 2.3e9, data: 1500, e: 3.5e7, a: 2.0, p: 101325 },
+            "Average Adult Human Female": { c: "e", l: 1.62, m: 70, s: 5.0, v: 65, t: 2.4e9, data: 1500, e: 2.8e7, a: 1.7, p: 101325 },
+            "Average Human Brain": { c: "e", l: 0.15, m: 1.3, s: 0, v: 1.2, t: 2.4e9, data: 2.5e9, e: 5.4e5, a: 0.05, p: 101325 },
+            "Average T-Rex": { c: "e", l: 12, m: 8000, s: 7.5, v: 8000, t: 8.8e8, data: 3300, e: 3.3e9, a: 35, p: 101325 },
+            "Blue Whale": { c: "e", l: 24, m: 1.5e5, s: 10.2, v: 1.5e5, t: 2.8e9, data: 8000, e: 6.2e10, a: 300, p: 101325 },
+            "African Elephant": { c: "e", l: 6, m: 6000, s: 11.1, v: 6000, t: 2.2e9, data: 4000, e: 2.5e9, a: 28, p: 101325 },
+            "Giraffe": { c: "e", l: 5.5, m: 1200, s: 16.6, v: 1200, t: 7.9e8, data: 2500, e: 5.0e8, a: 15, p: 101325 },
+            "Lion": { c: "e", l: 2, m: 190, s: 22.2, v: 190, t: 4.7e8, data: 1800, e: 7.9e7, a: 2.5, p: 101325 },
+            "Cheetah": { c: "e", l: 1.5, m: 54, s: 33.5, v: 54, t: 3.7e8, data: 1200, e: 2.2e7, a: 1.2, p: 101325 },
+            "House Cat": { c: "e", l: 0.46, m: 4.5, s: 13.4, v: 4.5, t: 4.7e8, data: 800, e: 1.8e6, a: 0.24, p: 101325 },
+            "Banana Slug": { c: "e", l: 0.25, m: 0.11, s: 0.0028, v: 0.11, t: 2.2e8, data: 150, e: 40000, a: 0.015, p: 101325 },
+            "Snail": { c: "e", l: 0.03, m: 0.02, s: 0.001, v: 0.02, t: 9.4e7, data: 50, e: 8300, a: 0.005, p: 101325 },
+            "Ant (Worker)": { c: "e", l: 0.005, m: 0.000005, s: 0.08, v: 0.000005, t: 2.5e6, data: 10, e: 1, a: 0.0001, p: 101325 },
+            "Hummingbird": { c: "e", l: 0.1, m: 0.004, s: 15, v: 0.004, t: 1.5e8, data: 500, e: 5000, a: 0.01, p: 101325 },
+            "Human Red Blood Cell": { c: "e", l: 8e-6, m: 2.7e-14, s: 0.01, v: 9e-14, t: 1.0e7, data: 0.00001, e: 1e-12, a: 1.3e-10, p: 101325 },
+            "A Single Banana": { c: "e", l: 0.18, m: 0.12, s: 0, v: 0.12, t: 1.2e6, data: 0.5, e: 439000, a: 0.03, p: 101325 },
+            "A Slice of Pizza": { c: "e", l: 0.25, m: 0.15, s: 0, v: 0.3, t: 6.0e5, data: 0, e: 1.1e6, a: 0.04, p: 101325 },
+            "Hair Growth Speed": { c: "e", l: 0.015, m: 1e-6, s: 4.8e-9, v: 1e-6, t: 2.6e6, data: 0, e: 0, a: 1e-6, p: 101325 },
+            
+            // Microscopic & Atomic
+            "Influenza Virus": { c: "e", l: 1e-7, m: 1e-18, s: 1e-6, v: 1e-21, t: 1e5, data: 0.0001, e: 1e-15, a: 3.14e-14, p: 101325 },
+            "E. Coli Bacterium": { c: "e", l: 2e-6, m: 1e-15, s: 3e-5, v: 1e-18, t: 1e5, data: 0.005, e: 1e-13, a: 1e-11, p: 101325 },
+            "Hydrogen Atom": { c: "e", l: 1e-10, m: 1.67e-27, s: 2.2e6, v: 5e-31, t: 1e30, data: 1e-20, e: 1.5e-10, a: 1e-20, p: 0 },
+            "Electron": { c: "e", l: 2.8e-15, m: 9.1e-31, s: 2.2e6, v: 1e-45, t: 1e30, data: 1e-20, e: 8.1e-14, a: 1e-29, p: 0 },
+
+            // Everyday Objects
+            "Spaghetti Noodle": { c: "e", l: 0.26, m: 0.001, s: 0, v: 0.001, t: 6.3e7, data: 0, e: 1.5e4, a: 0.0016, p: 101325 },
+            "Standard Pencil": { c: "e", l: 0.19, m: 0.006, s: 0, v: 0.008, t: 1.5e8, data: 0, e: 1e5, a: 0.004, p: 101325 },
+            "A4 Paper Sheet": { c: "e", l: 0.297, m: 0.005, s: 0, v: 0.006, t: 3.1e8, data: 0.003, e: 8e4, a: 0.06237, p: 101325 },
+            "US Letter Paper Sheet": { c: "e", l: 0.2794, m: 0.0045, s: 0, v: 0.0055, t: 3.1e8, data: 0.003, e: 7.2e4, a: 0.0603, p: 101325 },
+            "Credit Card": { c: "e", l: 0.0856, m: 0.005, s: 0, v: 0.004, t: 1.5e8, data: 0.0001, e: 2e5, a: 0.0046, p: 101325 },
+            "Golf Ball": { c: "e", l: 0.04267, m: 0.0459, s: 0, v: 0.04, t: 3.1e8, data: 0, e: 0, a: 0.0057, p: 101325 },
+            "Tennis Ball": { c: "e", l: 0.067, m: 0.058, s: 0, v: 0.15, t: 1.5e8, data: 0, e: 0, a: 0.014, p: 101325 },
+            "Basketball": { c: "e", l: 0.24, m: 0.62, s: 0, v: 7.1, t: 1.5e8, data: 0, e: 0, a: 0.18, p: 101325 },
+            "Punched Card (Standard)": { c: "e", l: 0.187, m: 0.002, s: 0, v: 0.003, t: 1.5e9, data: 0.00008, e: 3e4, a: 0.015, p: 101325 },
+            "Floppy Disk (5.25in)": { c: "e", l: 0.133, m: 0.018, s: 0, v: 0.02, t: 6.3e8, data: 1.44, e: 3e5, a: 0.017, p: 101325 },
+            "Standard Tablespoon": { c: "e", l: 0.15, m: 0.03, s: 0, v: 0.015, t: 1.5e10, data: 0, e: 0, a: 0.006, p: 101325 },
+            
+            // Cosmic, Geographic & Environmental
+            "The Earth": { c: "e", l: 12742000, m: 5.97e24, s: 29780, v: 1.08e24, t: 1.4e17, data: 1e24, e: 2.6e33, a: 5.1e14, p: 101325 },
+            "The Sun": { c: "e", l: 1.39e9, m: 1.98e30, s: 220000, v: 1.41e30, t: 3.1e17, data: 1e28, e: 3.8e26, a: 6.09e18, p: 2.6e16 },
+            "The Moon": { c: "e", l: 3474800, m: 7.34e22, s: 1022, v: 2.19e19, t: 1.4e17, data: 1e22, e: 3.8e28, a: 3.79e13, p: 3e-10 },
+            "Jupiter": { c: "e", l: 1.39e8, m: 1.89e27, s: 13070, v: 1.43e27, t: 1.4e17, data: 1e26, e: 1.6e35, a: 6.14e16, p: 1e8 },
+            "Mercury": { c: "e", l: 4879400, m: 3.3e23, s: 47360, v: 6.08e19, t: 1.4e17, data: 1e21, e: 1e30, a: 7.48e13, p: 1e-9 },
+            "Venus": { c: "e", l: 12103600, m: 4.87e24, s: 35020, v: 9.28e23, t: 1.4e17, data: 1e23, e: 1e33, a: 4.6e14, p: 9300000 },
+            "Mars": { c: "e", l: 6779000, m: 6.39e23, s: 24070, v: 1.63e20, t: 1.4e17, data: 1e22, e: 1e31, a: 1.44e14, p: 610 },
+            "Saturn": { c: "e", l: 1.16e8, m: 5.68e26, s: 9680, v: 8.27e26, t: 1.4e17, data: 1e25, e: 1e34, a: 4.27e16, p: 1e8 },
+            "Uranus": { c: "e", l: 50724000, m: 8.68e25, s: 6800, v: 6.83e25, t: 1.4e17, data: 1e24, e: 1e33, a: 8.1e15, p: 1e8 },
+            "Neptune": { c: "e", l: 49244000, m: 1.02e26, s: 5430, v: 6.25e25, t: 1.4e17, data: 1e24, e: 1e33, a: 7.6e15, p: 1e8 },
+            "Pluto": { c: "e", l: 2376600, m: 1.3e22, s: 4740, v: 7e18, t: 1.4e17, data: 1e20, e: 1e28, a: 1.77e13, p: 1 },
+            "Milky Way Galaxy": { c: "e", l: 1e21, m: 3e42, s: 2.1e6, v: 3e60, t: 4.3e17, data: 1e40, e: 1e50, a: 1e42, p: 1e-15 },
+            "The Observable Universe": { c: "e", l: 8.8e26, m: 1.5e53, s: 0, v: 3.5e80, t: 4.3e17, data: 1e70, e: 1.3e69, a: 2.4e54, p: 1e-20 },
+            "State of Texas": { c: "e", l: 1270000, m: 5.6e19, s: 0, v: 2.08e19, t: 1.4e17, data: 1e16, e: 0, a: 6.95e11, p: 101325 },
+            "State of Rhode Island": { c: "e", l: 77000, m: 2.8e17, s: 0, v: 1.0e17, t: 1.4e17, data: 1e14, e: 0, a: 3.14e9, p: 101325 },
+            "Wales": { c: "e", l: 274000, m: 1.8e18, s: 0, v: 6e17, t: 1.4e17, data: 1e15, e: 0, a: 2.07e10, p: 101325 },
+            "Country of Canada": { c: "e", l: 5500000, m: 1e20, s: 0, v: 1e20, t: 1.4e17, data: 1e17, e: 0, a: 9.98e12, p: 101325 },
+            "Country of Russia": { c: "e", l: 9000000, m: 1.5e20, s: 0, v: 1.5e20, t: 1.4e17, data: 1e17, e: 0, a: 1.7e13, p: 101325 },
+            "Vatican City": { c: "e", l: 1000, m: 1e10, s: 0, v: 1e10, t: 1e11, data: 1e15, e: 0, a: 440000, p: 101325 },
+            "Sahara Desert": { c: "e", l: 4800000, m: 1e19, s: 0, v: 1e19, t: 1.4e17, data: 1e16, e: 0, a: 9.2e12, p: 101325 },
+            "Soccer Pitch (FIFA)": { c: "e", l: 105, m: 1.2e6, s: 0, v: 4.2e6, t: 1.5e9, data: 10, e: 0, a: 7140, p: 101325 },
+            "Olympic Swimming Pool": { c: "e", l: 50, m: 2.5e6, s: 0, v: 2.5e6, t: 1.5e9, data: 20, e: 0, a: 1250, p: 101325 },
+            "The Pacific Ocean": { c: "e", l: 1.9e7, m: 7.1e20, s: 1.5, v: 7.1e20, t: 1.4e17, data: 1e20, e: 8.0e20, a: 1.65e14, p: 101325 },
+            "Hurricane Katrina": { c: "e", l: 6.4e5, m: 3.0e14, s: 78, v: 2.5e14, t: 6.9e5, data: 1e12, e: 6.0e14, a: 1.3e11, p: 90200 },
+            "Typical Cumulus Cloud": { c: "e", l: 1000, m: 5.0e5, s: 15, v: 1.0e12, t: 3600, data: 1e6, e: 5.6e7, a: 1e6, p: 101000 },
+            "Chicxulub Asteroid (Dino Killer)": { c: "e", l: 10000, m: 4.6e15, s: 20000, v: 5.2e14, t: 1.4e17, data: 1e14, e: 4.2e23, a: 3.1e8, p: 0 },
+            "5-Megaton Nuclear Explosion": { c: "e", l: 6000, m: 0, s: 300, v: 1.1e11, t: 10, data: 1e5, e: 2.09e16, a: 1.1e8, p: 1e8 },
+            "Lightning Bolt": { c: "e", l: 5000, m: 0.0001, s: 100000, v: 10000, t: 0.0002, data: 1, e: 1.0e9, a: 50, p: 101325 },
+            
+            // Everyday Micro & Random
+            "Grain of Sand": { c: "e", l: 0.002, m: 0.00005, s: 0, v: 0.00005, t: 1.5e14, data: 0.001, e: 0.001, a: 0.000012, p: 101325 },
+            "Standard AA Battery": { c: "e", l: 0.05, m: 0.023, s: 0, v: 0.008, t: 1.5e8, data: 0, e: 10000, a: 0.002, p: 101325 },
+            "A Single Penny": { c: "e", l: 0.019, m: 0.0025, s: 0, v: 0.0003, t: 1.5e9, data: 0, e: 0, a: 0.00057, p: 101325 },
+            "A Paperclip": { c: "e", l: 0.03, m: 0.001, s: 0, v: 0.0001, t: 3.1e9, data: 0, e: 0, a: 0.0002, p: 101325 }
+        };
+
+        // --- UNIVERSAL JOULE BRIDGE ---
+        // This matrix allows any dimension to be translated into Energy (Joules), and then back into any other dimension.
+        // It ensures no mathematical combination ever fails.
+        const bridgeToJoules = {
+            'e': (val) => val,
+            'm': (val) => val * Math.pow(299792458, 2), // E = mc^2
+            'l': (val) => val * 1, // Assume 1 Newton force -> E = F * d
+            't': (val) => (val * 299792458) * 1, // t -> distance -> energy
+            's': (val) => 0.5 * 1 * Math.pow(val, 2), // KE = 1/2 mv^2 (assuming 1kg mass)
+            'v': (val) => val * Math.pow(299792458, 2), // 1L = 1kg water -> E=mc^2
+            'a': (val) => Math.sqrt(val) * 1, // Area -> length -> energy
+            'data': (val) => val * 1e-6, // Arbitrary data-energy bridge
+            'p': (val) => val * 1 // 1 Pa = 1 J/m^3
+        };
+
+        const bridgeFromJoules = {
+            'e': (val) => val,
+            'm': (val) => val / Math.pow(299792458, 2),
+            'l': (val) => val / 1,
+            't': (val) => (val / 1) / 299792458,
+            's': (val) => Math.sqrt(val * 2), // Assumes 1kg mass
+            'v': (val) => val / Math.pow(299792458, 2),
+            'a': (val) => Math.pow((val / 1), 2),
+            'data': (val) => val * 1e6,
+            'p': (val) => val / 1
+        };
+
+        function runOmniConversion() {
+            const inputVal = parseFloat(document.getElementById('omniValue').value) || 0;
+            const fromKey = document.getElementById('omniFrom').value;
+            const toKey = document.getElementById('omniTo').value;
+
+            const fromObj = omniDB[fromKey];
+            const toObj = omniDB[toKey];
+
+            let resultHTML = "";
+
+            /* ------------------------------------------------------------------
+               Dynamic Formatting (No Sci Notation unless necessary)
+               ------------------------------------------------------------------ */
+            function formatVal(num) {
+                if (num === 0) return "0";
+                
+                let strNum = num.toString();
+                
+                // If JS auto-converts to scientific notation OR it's extremely long, format it cleanly
+                if (strNum.includes('e') || strNum.length > 15) {
+                    // Only fall back to scientific if it's truly unreadable or has > 8 zeroes
+                    if (num > 1e15 || num < 1e-8) {
+                        return num.toExponential(4);
+                    } else {
+                        // Attempt to force fixed decimal
+                        let fixed = num.toFixed(8);
+                        // Strip trailing zeros
+                        return fixed.replace(/\.?0+$/, "");
+                    }
+                }
+                
+                // For normal numbers, return up to 8 decimal places
+                let parsed = parseFloat(num.toPrecision(8));
+                return parsed.toString();
+            }
+
+            function getDimName(dimChar) {
+                const map = { 'l': "Length", 'm': "Mass", 't': "Time", 's': "Speed", 'v': "Volume", 'data': "Data Storage", 'e': "Energy", 'a': "Surface Area", 'p': "Pressure" };
+                return map[dimChar] || "Dimension";
+            }
+
+            // ==================================================================
+            // SCENARIO 1: UNIT to UNIT
+            // ==================================================================
+            if (fromObj.c === "u" && toObj.c === "u") {
+                if (fromObj.d === toObj.d) {
+                    // Exact match (e.g. Meters to Feet)
+                    let calculated = (inputVal * fromObj.val) / toObj.val;
+                    resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">${formatVal(calculated)} ${toKey}</b>`;
+                } else {
+                    // MISMATCH DIMENSIONS - Use Universal Joule Bridge
+                    let baseFrom = inputVal * fromObj.val; // Normalizes input to core base (kg, meters, etc)
+                    
+                    // 1. Convert Base 1 to Joules
+                    let energyJoules = bridgeToJoules[fromObj.d](baseFrom);
+                    
+                    // 2. Convert Joules to Base 2
+                    let targetBaseVal = bridgeFromJoules[toObj.d](energyJoules);
+                    
+                    // 3. Convert Base 2 to Target Unit
+                    let finalVal = targetBaseVal / toObj.val;
+
+                    resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">${formatVal(finalVal)} ${toKey}</b><br><span class="warning-text">THEORETICAL MATRIX ACTIVE: Translated ${getDimName(fromObj.d)} into universal energy (Joules) and converted back to ${getDimName(toObj.d)}. The result may be inaccurate.</span>`;
+                }
+            }
+            
+            // ==================================================================
+            // SCENARIO 2: ENTITY to UNIT
+            // ==================================================================
+            else if (fromObj.c === "e" && toObj.c === "u") {
+                let targetDimension = toObj.d;
+                let entityBaseVal = fromObj[targetDimension];
+                
+                if (targetDimension === 's' && entityBaseVal === 0) {
+                    resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">0 ${toKey}</b><br><span class="warning-text">Note: ${fromKey} is stationary relative to the Earth's surface. Its speed is 0.</span>`;
+                } else {
+                    let calculated = (inputVal * entityBaseVal) / toObj.val;
+                    resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">${formatVal(calculated)} ${toKey}</b><br><span class="bridge-text">(Extracting the base ${getDimName(targetDimension)} of ${fromKey} to perform the calculation.)</span>`;
+                }
+            }
+            
+            // ==================================================================
+            // SCENARIO 3: UNIT to ENTITY
+            // ==================================================================
+            else if (fromObj.c === "u" && toObj.c === "e") {
+                let targetDimension = fromObj.d;
+                let entityBaseVal = toObj[targetDimension];
+
+                if (targetDimension === 's' && entityBaseVal === 0) {
+                    resultHTML = `<span class="warning-text">Error: Cannot divide by zero.</span><br><span class="bridge-text">The entity <b>"${toKey}"</b> is stationary. It does not possess measurable <b>Speed</b> for this comparison.</span>`;
+                } else {
+                    let calculated = (inputVal * fromObj.val) / entityBaseVal;
+                    resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">${formatVal(calculated)} ${toKey}s</b><br><span class="bridge-text">(Comparing your input to the standard ${getDimName(targetDimension)} of ${toKey}.)</span>`;
+                }
+            }
+            
+            // ==================================================================
+            // SCENARIO 4: ENTITY to ENTITY
+            // ==================================================================
+            else if (fromObj.c === "e" && toObj.c === "e") {
+                if (fromKey === toKey) {
+                    resultHTML = `Comparing 1 ${fromKey} to 1 ${toKey} results in a perfect 1:1 existential match.`;
+                } else {
+                    resultHTML = `Comparing <b>${inputVal} ${fromKey}</b> vs <b>1 ${toKey}</b>:<br><br><ul style="text-align:left; font-size:18px; line-height: 1.8; margin: 0 auto; display: inline-block;">`;
+                    let allDimensions = ['l', 'm', 's', 'v', 't', 'data', 'e', 'a', 'p'];
+                    let warningAdded = false;
+                    
+                    allDimensions.forEach(function(dim) {
+                        let fromVal = fromObj[dim];
+                        let toVal = toObj[dim];
+
+                        if (toVal > 0) {
+                            let calculated = (inputVal * fromVal) / toVal;
+                            resultHTML += `<li><strong>${getDimName(dim)}:</strong> Equivalent to ${formatVal(calculated)} ${toKey}s.</li>`;
+                        } else if (fromVal > 0 && toVal === 0) {
+                            warningAdded = true;
+                            resultHTML += `<li><strong style="color:#d9534f;">${getDimName(dim)}:</strong> 0 (Cannot compare, ${toKey} lacks this dimension).</li>`;
+                        } else {
+                            resultHTML += `<li><strong style="color:#777;">${getDimName(dim)}:</strong> 0 (Neither possess this property).</li>`;
+                        }
+                    });
+                    
+                    resultHTML += "</ul>";
+
+                    if(warningAdded) {
+                        resultHTML += `<br><span class="warning-text">Note: Some dimensions yielded a 0 result because ${toKey} lacks a meaningful value. The physical representation might be inaccurate.</span>`;
+                    }
+                }
+            }
+
+            document.getElementById('omniResult').innerHTML = resultHTML;
+        }
+
+        // Initialize Dropdowns
+        function initOmniDropdowns() {
+            const selFrom = document.getElementById('omniFrom');
+            const selTo = document.getElementById('omniTo');
+            
+            if (!selFrom || !selTo) return;
+            
+            const sortedEntities = Object.keys(omniDB).sort();
+            let optionsHTML = "";
+            
+            sortedEntities.forEach(function(key) {
+                optionsHTML += `<option value="${key}">${key}</option>`;
+            });
+
+            selFrom.innerHTML = optionsHTML;
+            selTo.innerHTML = optionsHTML;
+            
+            selFrom.value = "Meters";
+            selTo.value = "Feet";
+            
+            runOmniConversion();
+        }
+
+        window.addEventListener('DOMContentLoaded', initOmniDropdowns);
+    </script>
+</body>
+</html>
