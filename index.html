@@ -17,7 +17,27 @@
             min-height: 100vh; 
             padding: 20px;
             box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        /* --- THEME TOGGLE STYLES --- */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #337ab7;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .theme-toggle:hover { background-color: #286090; }
 
         .container { 
             background-color: #ffffff; 
@@ -27,6 +47,7 @@
             padding: 40px; 
             width: 100%;
             max-width: 950px; 
+            transition: background-color 0.3s, border-color 0.3s;
         }
         
         h3 { 
@@ -37,6 +58,7 @@
             padding-bottom: 15px; 
             margin-bottom: 15px; 
             color: #222222;
+            transition: color 0.3s, border-color 0.3s;
         }
         
         .help-block { 
@@ -45,6 +67,7 @@
             color: #737373; 
             font-size: 15px; 
             line-height: 1.6;
+            transition: color 0.3s;
         }
 
         .row { 
@@ -64,6 +87,7 @@
             font-weight: 700; 
             font-size: 14px; 
             color: #333333;
+            transition: color 0.3s;
         }
         
         .form-control { 
@@ -79,7 +103,7 @@
             box-shadow: inset 0 1px 2px rgba(0,0,0,.075); 
             box-sizing: border-box; 
             font-family: inherit; 
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.2s;
         }
         
         select.form-control { 
@@ -98,7 +122,7 @@
         }
 
         .panel { 
-            background-color: #f9f9f9; 
+            background-color: #e9f5ff; 
             border: 1px solid #bce8f1; 
             border-radius: 6px; 
             padding: 35px; 
@@ -110,7 +134,7 @@
             position: relative; 
             line-height: 1.6; 
             text-align: center;
-            background-color: #e9f5ff;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
 
         .warning-text { 
@@ -131,15 +155,31 @@
             display: block;
             font-style: italic;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            transition: color 0.3s;
         }
+
+        /* --- DARK MODE STYLES --- */
+        body.dark-mode { background-color: #121212; color: #e0e0e0; }
+        body.dark-mode .container { background-color: #1e1e1e; border-color: #333333; box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+        body.dark-mode h3 { color: #ffffff; border-bottom-color: #444444; }
+        body.dark-mode .help-block { color: #aaaaaa; }
+        body.dark-mode label { color: #dddddd; }
+        body.dark-mode .form-control { background-color: #2c2c2c; color: #ffffff; border-color: #555555; }
+        body.dark-mode select.form-control { background-image: linear-gradient(45deg, transparent 50%, #777 50%), linear-gradient(135deg, #777 50%, transparent 50%); }
+        body.dark-mode .panel { background-color: #1a2630; border-color: #234b5e; color: #6db3d1; }
+        body.dark-mode .theme-toggle { background-color: #444; color: #eee; }
+        body.dark-mode .theme-toggle:hover { background-color: #555; }
+        body.dark-mode .bridge-text { color: #999999; }
     </style>
 </head>
 <body>
 
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Theme</button>
+
     <div class="container">
         <h3>Omni-Dimensional Converter</h3>
         <span class="help-block">
-            A hyper-advanced physics engine capable of infinite cross-dimensional bridging. Converts standard units and complex real-world entities across 9 physical dimensions.
+            A hyper-advanced physics engine capable of infinite cross-dimensional bridging. Converts standard units and complex real-world entities across 10 physical dimensions (Length, Mass, Time, Speed, Volume, Data, Energy, Area, Pressure, and Pain). <br><strong>If dimensions do not match, the engine translates the data through a grounded Human-Scale Energy Matrix so combinations stay mathematically sane and never fail.</strong>
         </span>
         
         <div class="row">
@@ -170,6 +210,20 @@
 
     <script>
         /* ==========================================================================
+           THEME TOGGLE LOGIC
+           ========================================================================== */
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('omniTheme', isDark ? 'dark' : 'light');
+        }
+
+        // Auto-load theme preference
+        if (localStorage.getItem('omniTheme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        /* ==========================================================================
            OMNI-DIMENSIONAL UNIT & ENTITY DATABASE
            ========================================================================== */
            
@@ -177,6 +231,7 @@
         // l = Length (Meters), m = Mass (Kilograms), t = Time (Seconds)
         // s = Speed (Meters/Sec), v = Volume (Liters), data = Data (Megabytes)
         // e = Energy (Joules), a = Area (Sq Meters), p = Pressure (Pascals)
+        // pain = Pain (Dols)
         // c: "u" = Standard Unit, c: "e" = Real-World Entity
 
         const omniDB = {
@@ -446,154 +501,188 @@
             "Inches of Mercury (inHg)": { c: "u", d: "p", val: 3386.39 },
             "Inches of Water (inH2O)": { c: "u", d: "p", val: 249.082 },
 
+            // Pain (Base: 1 Dol)
+            "Dols (Pain Scale)": { c: "u", d: "pain", val: 1 },
+
             // ----------------------------------------------------------------------
             // REAL-WORLD ENTITIES (Massively Expanded Multi-dimensional scaling)
-            // Units: l(m), m(kg), s(m/s), v(Liters), t(sec), data(MB), e(Joules), a(m^2), p(Pa)
+            // Units: l(m), m(kg), s(m/s), v(Liters), t(sec), data(MB), e(Joules), a(m^2), p(Pa), pain(Dols)
             // Note: ALL entities now have values for ALL dimensions to enable universal comparison. 
             // ----------------------------------------------------------------------
             
             // Architecture & Landmarks
-            "Titanic Ship": { c: "e", l: 269, m: 4.76e7, s: 12.08, v: 1.3e8, t: 3.15e7, data: 1.5e6, e: 4e11, a: 9000, p: 101325 },
-            "Eiffel Tower": { c: "e", l: 330, m: 1.01e7, s: 0, v: 8.5e6, t: 4.2e9, data: 500, e: 5.1e10, a: 15625, p: 101325 },
-            "Burj Khalifa": { c: "e", l: 828, m: 5e8, s: 0, v: 3.3e8, t: 3.1e9, data: 20000, e: 1.6e12, a: 309473, p: 101325 },
-            "Empire State Building": { c: "e", l: 381, m: 3.3e8, s: 0, v: 1.04e9, t: 2.9e9, data: 10000, e: 6.2e11, a: 208879, p: 101325 },
-            "Mount Everest": { c: "e", l: 8848, m: 1.6e14, s: 0, v: 5.5e13, t: 1.5e15, data: 1e12, e: 6.9e18, a: 4.5e9, p: 33700 },
-            "Great Pyramid of Giza": { c: "e", l: 138.8, m: 6e9, s: 0, v: 2.58e9, t: 1.4e11, data: 800, e: 4.1e12, a: 52900, p: 101325 },
-            "Football Field (US)": { c: "e", l: 109.7, m: 1.5e6, s: 0, v: 5.35e6, t: 1.5e9, data: 10, e: 0, a: 5351.21, p: 101325 },
-            "Statue of Liberty": { c: "e", l: 93, m: 2.04e5, s: 0, v: 1.5e6, t: 4.2e9, data: 300, e: 8.5e10, a: 2500, p: 101325 },
-            "Leaning Tower of Pisa": { c: "e", l: 56.67, m: 1.45e7, s: 0, v: 1.2e6, t: 2.1e10, data: 200, e: 3.2e10, a: 4000, p: 101325 },
-            "Space Needle": { c: "e", l: 184, m: 8.66e6, s: 0, v: 2.1e6, t: 1.9e9, data: 1500, e: 4.5e10, a: 8000, p: 101325 },
-            "Grand Canyon": { c: "e", l: 446000, m: 1.2e15, s: 0, v: 4.1e15, t: 1.8e14, data: 1e14, e: 0, a: 4.9e9, p: 101325 },
-            "Great Wall of China": { c: "e", l: 21196000, m: 5.2e10, s: 0, v: 3.4e10, t: 6.3e10, data: 5e6, e: 0, a: 1.2e8, p: 101325 },
-            "Taj Mahal": { c: "e", l: 73, m: 1e8, s: 0, v: 5e7, t: 1.2e10, data: 1000, e: 1e10, a: 170000, p: 101325 },
-            "Stonehenge": { c: "e", l: 33, m: 1.5e6, s: 0, v: 5e5, t: 1.5e11, data: 10, e: 0, a: 850, p: 101325 },
-            "Golden Gate Bridge": { c: "e", l: 2737, m: 8.04e8, s: 0, v: 1e8, t: 2.5e9, data: 5000, e: 1e11, a: 75000, p: 101325 },
+            "Titanic Ship": { c: "e", l: 269, m: 4.76e7, s: 12.08, v: 1.3e8, t: 3.15e7, data: 1.5e6, e: 4e11, a: 9000, p: 101325, pain: 0 },
+            "Eiffel Tower": { c: "e", l: 330, m: 1.01e7, s: 0, v: 8.5e6, t: 4.2e9, data: 500, e: 5.1e10, a: 15625, p: 101325, pain: 0 },
+            "Burj Khalifa": { c: "e", l: 828, m: 5e8, s: 0, v: 3.3e8, t: 3.1e9, data: 20000, e: 1.6e12, a: 309473, p: 101325, pain: 0 },
+            "Empire State Building": { c: "e", l: 381, m: 3.3e8, s: 0, v: 1.04e9, t: 2.9e9, data: 10000, e: 6.2e11, a: 208879, p: 101325, pain: 0 },
+            "Mount Everest": { c: "e", l: 8848, m: 1.6e14, s: 0, v: 5.5e13, t: 1.5e15, data: 1e12, e: 6.9e18, a: 4.5e9, p: 33700, pain: 0 },
+            "Great Pyramid of Giza": { c: "e", l: 138.8, m: 6e9, s: 0, v: 2.58e9, t: 1.4e11, data: 800, e: 4.1e12, a: 52900, p: 101325, pain: 0 },
+            "Football Field (US)": { c: "e", l: 109.7, m: 1.5e6, s: 0, v: 5.35e6, t: 1.5e9, data: 10, e: 0, a: 5351.21, p: 101325, pain: 0 },
+            "Statue of Liberty": { c: "e", l: 93, m: 2.04e5, s: 0, v: 1.5e6, t: 4.2e9, data: 300, e: 8.5e10, a: 2500, p: 101325, pain: 0 },
+            "Leaning Tower of Pisa": { c: "e", l: 56.67, m: 1.45e7, s: 0, v: 1.2e6, t: 2.1e10, data: 200, e: 3.2e10, a: 4000, p: 101325, pain: 0 },
+            "Space Needle": { c: "e", l: 184, m: 8.66e6, s: 0, v: 2.1e6, t: 1.9e9, data: 1500, e: 4.5e10, a: 8000, p: 101325, pain: 0 },
+            "Grand Canyon": { c: "e", l: 446000, m: 1.2e15, s: 0, v: 4.1e15, t: 1.8e14, data: 1e14, e: 0, a: 4.9e9, p: 101325, pain: 0 },
+            "Great Wall of China": { c: "e", l: 21196000, m: 5.2e10, s: 0, v: 3.4e10, t: 6.3e10, data: 5e6, e: 0, a: 1.2e8, p: 101325, pain: 0 },
+            "Taj Mahal": { c: "e", l: 73, m: 1e8, s: 0, v: 5e7, t: 1.2e10, data: 1000, e: 1e10, a: 170000, p: 101325, pain: 0 },
+            "Stonehenge": { c: "e", l: 33, m: 1.5e6, s: 0, v: 5e5, t: 1.5e11, data: 10, e: 0, a: 850, p: 101325, pain: 0 },
+            "Golden Gate Bridge": { c: "e", l: 2737, m: 8.04e8, s: 0, v: 1e8, t: 2.5e9, data: 5000, e: 1e11, a: 75000, p: 101325, pain: 0 },
+            "Average House (US)": { c: "e", l: 15, m: 150000, s: 0, v: 600000, t: 3e9, data: 0, e: 0, a: 200, p: 101325, pain: 0 },
             
             // Fictional / Sci-Fi Entities
-            "The Death Star (Star Wars)": { c: "e", l: 120000, m: 1e15, s: 3e8, v: 9e14, t: 1e8, data: 1e20, e: 1e32, a: 4.5e10, p: 101325 },
-            "Millennium Falcon": { c: "e", l: 34.75, m: 1e5, s: 3e8, v: 5000, t: 1e9, data: 1e10, e: 1e15, a: 1000, p: 101325 },
-            "USS Enterprise (NCC-1701-D)": { c: "e", l: 642, m: 4.5e9, s: 3e8, v: 1e8, t: 3e9, data: 1e15, e: 1e20, a: 2e5, p: 101325 },
-            "TARDIS (Doctor Who)": { c: "e", l: 1.3, m: 3000, s: 3e8, v: 1e15, t: 1e15, data: 1e25, e: 1e30, a: 5, p: 101325 },
+            "The Death Star (Star Wars)": { c: "e", l: 120000, m: 1e15, s: 3e8, v: 9e14, t: 1e8, data: 1e20, e: 1e32, a: 4.5e10, p: 101325, pain: 0 },
+            "Millennium Falcon": { c: "e", l: 34.75, m: 1e5, s: 3e8, v: 5000, t: 1e9, data: 1e10, e: 1e15, a: 1000, p: 101325, pain: 0 },
+            "USS Enterprise (NCC-1701-D)": { c: "e", l: 642, m: 4.5e9, s: 3e8, v: 1e8, t: 3e9, data: 1e15, e: 1e20, a: 2e5, p: 101325, pain: 0 },
+            "TARDIS (Doctor Who)": { c: "e", l: 1.3, m: 3000, s: 3e8, v: 1e15, t: 1e15, data: 1e25, e: 1e30, a: 5, p: 101325, pain: 0 },
 
             // Vehicles & Tech
-            "Boeing 747": { c: "e", l: 70.6, m: 183500, s: 255, v: 876000, t: 9.4e8, data: 5000, e: 1.4e10, a: 511, p: 101325 },
-            "Space Shuttle": { c: "e", l: 37.2, m: 2.03e6, s: 7850, v: 4.5e6, t: 9.4e8, data: 10240, e: 3.3e13, a: 250, p: 0 },
-            "Saturn V Rocket": { c: "e", l: 110.6, m: 2.97e6, s: 2777, v: 5e6, t: 1.5e8, data: 2.5, e: 1.4e13, a: 400, p: 0 },
-            "Tesla Model 3": { c: "e", l: 4.69, m: 1611, s: 61, v: 2800, t: 4.7e8, data: 64000, e: 2.16e8, a: 8.6, p: 101325 },
-            "Bugatti Chiron": { c: "e", l: 4.54, m: 1996, s: 118, v: 2600, t: 6.3e8, data: 32000, e: 2.8e8, a: 9.2, p: 101325 },
-            "Fully Loaded Semi-Truck": { c: "e", l: 21.9, m: 36000, s: 33.5, v: 65000, t: 4.7e8, data: 100, e: 2.0e7, a: 53.5, p: 101325 },
-            "Standard CD-ROM": { c: "e", l: 0.12, m: 0.015, s: 1.2, v: 0.013, t: 1.5e9, data: 700, e: 0.5, a: 0.011, p: 101325 },
-            "Standard Blu-Ray": { c: "e", l: 0.12, m: 0.015, s: 5.0, v: 0.013, t: 1.5e9, data: 25000, e: 0.5, a: 0.011, p: 101325 },
-            "Standard iPhone 15": { c: "e", l: 0.147, m: 0.171, s: 0, v: 0.08, t: 1.2e8, data: 128000, e: 46000, a: 0.01, p: 101325 },
-            "A Standard Brick": { c: "e", l: 0.203, m: 2.26, s: 0, v: 1.13, t: 1.5e10, data: 0, e: 450, a: 0.046, p: 101325 },
-            "Double-Decker Bus": { c: "e", l: 8.38, m: 12500, s: 22.3, v: 80000, t: 4.7e8, data: 50, e: 1.5e7, a: 21, p: 101325 },
-            "School Bus": { c: "e", l: 13.7, m: 11000, s: 24.5, v: 75000, t: 3.8e8, data: 20, e: 1.2e7, a: 34, p: 101325 },
-            "Standard Car": { c: "e", l: 4.5, m: 1400, s: 30, v: 2500, t: 3.8e8, data: 500, e: 1.8e8, a: 8, p: 101325 },
-            "International Space Station": { c: "e", l: 109, m: 419725, s: 7660, v: 915600, t: 9.4e8, data: 5e6, e: 1.5e12, a: 4000, p: 0 },
-            "Standard Washing Machine": { c: "e", l: 0.85, m: 70, s: 0.1, v: 100, t: 3e8, data: 1, e: 5e6, a: 3, p: 101325 },
+            "Boeing 747": { c: "e", l: 70.6, m: 183500, s: 255, v: 876000, t: 9.4e8, data: 5000, e: 1.4e10, a: 511, p: 101325, pain: 0 },
+            "Space Shuttle": { c: "e", l: 37.2, m: 2.03e6, s: 7850, v: 4.5e6, t: 9.4e8, data: 10240, e: 3.3e13, a: 250, p: 0, pain: 0 },
+            "Saturn V Rocket": { c: "e", l: 110.6, m: 2.97e6, s: 2777, v: 5e6, t: 1.5e8, data: 2.5, e: 1.4e13, a: 400, p: 0, pain: 0 },
+            "Apollo 11 Saturn V": { c: "e", l: 110.6, m: 2.97e6, s: 2777, v: 5e6, t: 1.5e8, data: 2.5, e: 1.4e13, a: 400, p: 0, pain: 0 },
+            "Voyager 1 Spacecraft": { c: "e", l: 3.7, m: 722, s: 17000, v: 15, t: 1.5e9, data: 0.068, e: 1e11, a: 10, p: 0, pain: 0 },
+            "James Webb Space Telescope": { c: "e", l: 20, m: 6161, s: 200, v: 300, t: 3e8, data: 68000, e: 1e10, a: 25, p: 0, pain: 0 },
+            "Large Hadron Collider": { c: "e", l: 26659, m: 1e8, s: 0, v: 1e6, t: 1e9, data: 1e10, e: 1e14, a: 1e5, p: 101325, pain: 0 },
+            "Tesla Model 3": { c: "e", l: 4.69, m: 1611, s: 61, v: 2800, t: 4.7e8, data: 64000, e: 2.16e8, a: 8.6, p: 101325, pain: 0 },
+            "Bugatti Chiron": { c: "e", l: 4.54, m: 1996, s: 118, v: 2600, t: 6.3e8, data: 32000, e: 2.8e8, a: 9.2, p: 101325, pain: 0 },
+            "Fully Loaded Semi-Truck": { c: "e", l: 21.9, m: 36000, s: 33.5, v: 65000, t: 4.7e8, data: 100, e: 2.0e7, a: 53.5, p: 101325, pain: 0 },
+            "Standard CD-ROM": { c: "e", l: 0.12, m: 0.015, s: 1.2, v: 0.013, t: 1.5e9, data: 700, e: 0.5, a: 0.011, p: 101325, pain: 0 },
+            "Standard Blu-Ray": { c: "e", l: 0.12, m: 0.015, s: 5.0, v: 0.013, t: 1.5e9, data: 25000, e: 0.5, a: 0.011, p: 101325, pain: 0 },
+            "Standard iPhone 15": { c: "e", l: 0.147, m: 0.171, s: 0, v: 0.08, t: 1.2e8, data: 128000, e: 46000, a: 0.01, p: 101325, pain: 0 },
+            "A Standard Brick": { c: "e", l: 0.203, m: 2.26, s: 0, v: 1.13, t: 1.5e10, data: 0, e: 450, a: 0.046, p: 101325, pain: 0 },
+            "Double-Decker Bus": { c: "e", l: 8.38, m: 12500, s: 22.3, v: 80000, t: 4.7e8, data: 50, e: 1.5e7, a: 21, p: 101325, pain: 0 },
+            "School Bus": { c: "e", l: 13.7, m: 11000, s: 24.5, v: 75000, t: 3.8e8, data: 20, e: 1.2e7, a: 34, p: 101325, pain: 0 },
+            "Standard Car": { c: "e", l: 4.5, m: 1400, s: 30, v: 2500, t: 3.8e8, data: 500, e: 1.8e8, a: 8, p: 101325, pain: 0 },
+            "International Space Station": { c: "e", l: 109, m: 419725, s: 7660, v: 915600, t: 9.4e8, data: 5e6, e: 1.5e12, a: 4000, p: 0, pain: 0 },
+            "Standard Washing Machine": { c: "e", l: 0.85, m: 70, s: 0.1, v: 100, t: 3e8, data: 1, e: 5e6, a: 3, p: 101325, pain: 0 },
+            "Floppy Disk (5.25in)": { c: "e", l: 0.133, m: 0.018, s: 0, v: 0.02, t: 6.3e8, data: 1.2, e: 3e5, a: 0.017, p: 101325, pain: 0 },
+            "Floppy Disk (3.5in)": { c: "e", l: 0.09, m: 0.018, s: 0, v: 0.015, t: 6.3e8, data: 1.44, e: 3e5, a: 0.008, p: 101325, pain: 0 },
             
             // Biological & Living
-            "Danny DeVito": { c: "e", l: 1.47, m: 88, s: 3.5, v: 85, t: 2.5e9, data: 1500, e: 3.7e7, a: 1.8, p: 101325 },
-            "Average Adult Human Male": { c: "e", l: 1.75, m: 85, s: 5.5, v: 80, t: 2.3e9, data: 1500, e: 3.5e7, a: 2.0, p: 101325 },
-            "Average Adult Human Female": { c: "e", l: 1.62, m: 70, s: 5.0, v: 65, t: 2.4e9, data: 1500, e: 2.8e7, a: 1.7, p: 101325 },
-            "Average Human Brain": { c: "e", l: 0.15, m: 1.3, s: 0, v: 1.2, t: 2.4e9, data: 2.5e9, e: 5.4e5, a: 0.05, p: 101325 },
-            "Average T-Rex": { c: "e", l: 12, m: 8000, s: 7.5, v: 8000, t: 8.8e8, data: 3300, e: 3.3e9, a: 35, p: 101325 },
-            "Blue Whale": { c: "e", l: 24, m: 1.5e5, s: 10.2, v: 1.5e5, t: 2.8e9, data: 8000, e: 6.2e10, a: 300, p: 101325 },
-            "African Elephant": { c: "e", l: 6, m: 6000, s: 11.1, v: 6000, t: 2.2e9, data: 4000, e: 2.5e9, a: 28, p: 101325 },
-            "Giraffe": { c: "e", l: 5.5, m: 1200, s: 16.6, v: 1200, t: 7.9e8, data: 2500, e: 5.0e8, a: 15, p: 101325 },
-            "Lion": { c: "e", l: 2, m: 190, s: 22.2, v: 190, t: 4.7e8, data: 1800, e: 7.9e7, a: 2.5, p: 101325 },
-            "Cheetah": { c: "e", l: 1.5, m: 54, s: 33.5, v: 54, t: 3.7e8, data: 1200, e: 2.2e7, a: 1.2, p: 101325 },
-            "House Cat": { c: "e", l: 0.46, m: 4.5, s: 13.4, v: 4.5, t: 4.7e8, data: 800, e: 1.8e6, a: 0.24, p: 101325 },
-            "Banana Slug": { c: "e", l: 0.25, m: 0.11, s: 0.0028, v: 0.11, t: 2.2e8, data: 150, e: 40000, a: 0.015, p: 101325 },
-            "Snail": { c: "e", l: 0.03, m: 0.02, s: 0.001, v: 0.02, t: 9.4e7, data: 50, e: 8300, a: 0.005, p: 101325 },
-            "Ant (Worker)": { c: "e", l: 0.005, m: 0.000005, s: 0.08, v: 0.000005, t: 2.5e6, data: 10, e: 1, a: 0.0001, p: 101325 },
-            "Hummingbird": { c: "e", l: 0.1, m: 0.004, s: 15, v: 0.004, t: 1.5e8, data: 500, e: 5000, a: 0.01, p: 101325 },
-            "Human Red Blood Cell": { c: "e", l: 8e-6, m: 2.7e-14, s: 0.01, v: 9e-14, t: 1.0e7, data: 0.00001, e: 1e-12, a: 1.3e-10, p: 101325 },
-            "A Single Banana": { c: "e", l: 0.18, m: 0.12, s: 0, v: 0.12, t: 1.2e6, data: 0.5, e: 439000, a: 0.03, p: 101325 },
-            "A Slice of Pizza": { c: "e", l: 0.25, m: 0.15, s: 0, v: 0.3, t: 6.0e5, data: 0, e: 1.1e6, a: 0.04, p: 101325 },
-            "Hair Growth Speed": { c: "e", l: 0.015, m: 1e-6, s: 4.8e-9, v: 1e-6, t: 2.6e6, data: 0, e: 0, a: 1e-6, p: 101325 },
+            "Danny DeVito": { c: "e", l: 1.47, m: 88, s: 3.5, v: 85, t: 2.5e9, data: 1500, e: 3.7e7, a: 1.8, p: 101325, pain: 1.5 },
+            "Average Adult Human Male": { c: "e", l: 1.75, m: 85, s: 5.5, v: 80, t: 2.3e9, data: 1500, e: 3.5e7, a: 2.0, p: 101325, pain: 1.5 },
+            "Average Adult Human Female": { c: "e", l: 1.62, m: 70, s: 5.0, v: 65, t: 2.4e9, data: 1500, e: 2.8e7, a: 1.7, p: 101325, pain: 1.5 },
+            "Average Human Brain": { c: "e", l: 0.15, m: 1.3, s: 0, v: 1.2, t: 2.4e9, data: 2.5e9, e: 5.4e5, a: 0.05, p: 101325, pain: 0 },
+            "Average Human Tooth": { c: "e", l: 0.02, m: 0.002, s: 0, v: 0.001, t: 2e9, data: 10, e: 0, a: 0.0004, p: 0, pain: 0 },
+            "Human Heart": { c: "e", l: 0.12, m: 0.3, s: 0, v: 0.28, t: 2.4e9, data: 100, e: 5e6, a: 0.02, p: 16000, pain: 0 },
+            "Average T-Rex": { c: "e", l: 12, m: 8000, s: 7.5, v: 8000, t: 8.8e8, data: 3300, e: 3.3e9, a: 35, p: 101325, pain: 0 },
+            "Blue Whale": { c: "e", l: 24, m: 1.5e5, s: 10.2, v: 1.5e5, t: 2.8e9, data: 8000, e: 6.2e10, a: 300, p: 101325, pain: 0 },
+            "African Elephant": { c: "e", l: 6, m: 6000, s: 11.1, v: 6000, t: 2.2e9, data: 4000, e: 2.5e9, a: 28, p: 101325, pain: 0 },
+            "Giraffe": { c: "e", l: 5.5, m: 1200, s: 16.6, v: 1200, t: 7.9e8, data: 2500, e: 5.0e8, a: 15, p: 101325, pain: 0 },
+            "Lion": { c: "e", l: 2, m: 190, s: 22.2, v: 190, t: 4.7e8, data: 1800, e: 7.9e7, a: 2.5, p: 101325, pain: 0 },
+            "Cheetah": { c: "e", l: 1.5, m: 54, s: 33.5, v: 54, t: 3.7e8, data: 1200, e: 2.2e7, a: 1.2, p: 101325, pain: 0 },
+            "House Cat": { c: "e", l: 0.46, m: 4.5, s: 13.4, v: 4.5, t: 4.7e8, data: 800, e: 1.8e6, a: 0.24, p: 101325, pain: 0 },
+            "Banana Slug": { c: "e", l: 0.25, m: 0.11, s: 0.0028, v: 0.11, t: 2.2e8, data: 150, e: 40000, a: 0.015, p: 101325, pain: 0 },
+            "Snail": { c: "e", l: 0.03, m: 0.02, s: 0.001, v: 0.02, t: 9.4e7, data: 50, e: 8300, a: 0.005, p: 101325, pain: 0 },
+            "Ant (Worker)": { c: "e", l: 0.005, m: 0.000005, s: 0.08, v: 0.000005, t: 2.5e6, data: 10, e: 1, a: 0.0001, p: 101325, pain: 0 },
+            "Hummingbird": { c: "e", l: 0.1, m: 0.004, s: 15, v: 0.004, t: 1.5e8, data: 500, e: 5000, a: 0.01, p: 101325, pain: 0 },
+            "Tardigrade": { c: "e", l: 0.0005, m: 1e-10, s: 0.00002, v: 1e-10, t: 3e9, data: 1, e: 1e-5, a: 1e-7, p: 101325, pain: 0 },
+            "Human Red Blood Cell": { c: "e", l: 8e-6, m: 2.7e-14, s: 0.01, v: 9e-14, t: 1.0e7, data: 0.00001, e: 1e-12, a: 1.3e-10, p: 101325, pain: 0 },
+            "A Single Banana": { c: "e", l: 0.18, m: 0.12, s: 0, v: 0.12, t: 1.2e6, data: 0.5, e: 439000, a: 0.03, p: 101325, pain: 0 },
+            "A Slice of Pizza": { c: "e", l: 0.25, m: 0.15, s: 0, v: 0.3, t: 6.0e5, data: 0, e: 1.1e6, a: 0.04, p: 101325, pain: 0 },
+            "A Grain of Rice": { c: "e", l: 0.007, m: 0.00002, s: 0, v: 0.00002, t: 1e8, data: 0, e: 350, a: 0.0001, p: 101325, pain: 0 },
+            "A Cup of Coffee": { c: "e", l: 0.1, m: 0.25, s: 0, v: 0.25, t: 7200, data: 0, e: 2000, a: 0.02, p: 101325, pain: 0 },
+            "Hair Growth Speed": { c: "e", l: 0.015, m: 1e-6, s: 4.8e-9, v: 1e-6, t: 2.6e6, data: 0, e: 0, a: 1e-6, p: 101325, pain: 0 },
             
             // Microscopic & Atomic
-            "Influenza Virus": { c: "e", l: 1e-7, m: 1e-18, s: 1e-6, v: 1e-21, t: 1e5, data: 0.0001, e: 1e-15, a: 3.14e-14, p: 101325 },
-            "E. Coli Bacterium": { c: "e", l: 2e-6, m: 1e-15, s: 3e-5, v: 1e-18, t: 1e5, data: 0.005, e: 1e-13, a: 1e-11, p: 101325 },
-            "Hydrogen Atom": { c: "e", l: 1e-10, m: 1.67e-27, s: 2.2e6, v: 5e-31, t: 1e30, data: 1e-20, e: 1.5e-10, a: 1e-20, p: 0 },
-            "Electron": { c: "e", l: 2.8e-15, m: 9.1e-31, s: 2.2e6, v: 1e-45, t: 1e30, data: 1e-20, e: 8.1e-14, a: 1e-29, p: 0 },
+            "Influenza Virus": { c: "e", l: 1e-7, m: 1e-18, s: 1e-6, v: 1e-21, t: 1e5, data: 0.0001, e: 1e-15, a: 3.14e-14, p: 101325, pain: 0 },
+            "E. Coli Bacterium": { c: "e", l: 2e-6, m: 1e-15, s: 3e-5, v: 1e-18, t: 1e5, data: 0.005, e: 1e-13, a: 1e-11, p: 101325, pain: 0 },
+            "Hydrogen Atom": { c: "e", l: 1e-10, m: 1.67e-27, s: 2.2e6, v: 5e-31, t: 1e30, data: 1e-20, e: 1.5e-10, a: 1e-20, p: 0, pain: 0 },
+            "Electron": { c: "e", l: 2.8e-15, m: 9.1e-31, s: 2.2e6, v: 1e-45, t: 1e30, data: 1e-20, e: 8.1e-14, a: 1e-29, p: 0, pain: 0 },
 
             // Everyday Objects
-            "Spaghetti Noodle": { c: "e", l: 0.26, m: 0.001, s: 0, v: 0.001, t: 6.3e7, data: 0, e: 1.5e4, a: 0.0016, p: 101325 },
-            "Standard Pencil": { c: "e", l: 0.19, m: 0.006, s: 0, v: 0.008, t: 1.5e8, data: 0, e: 1e5, a: 0.004, p: 101325 },
-            "A4 Paper Sheet": { c: "e", l: 0.297, m: 0.005, s: 0, v: 0.006, t: 3.1e8, data: 0.003, e: 8e4, a: 0.06237, p: 101325 },
-            "US Letter Paper Sheet": { c: "e", l: 0.2794, m: 0.0045, s: 0, v: 0.0055, t: 3.1e8, data: 0.003, e: 7.2e4, a: 0.0603, p: 101325 },
-            "Credit Card": { c: "e", l: 0.0856, m: 0.005, s: 0, v: 0.004, t: 1.5e8, data: 0.0001, e: 2e5, a: 0.0046, p: 101325 },
-            "Golf Ball": { c: "e", l: 0.04267, m: 0.0459, s: 0, v: 0.04, t: 3.1e8, data: 0, e: 0, a: 0.0057, p: 101325 },
-            "Tennis Ball": { c: "e", l: 0.067, m: 0.058, s: 0, v: 0.15, t: 1.5e8, data: 0, e: 0, a: 0.014, p: 101325 },
-            "Basketball": { c: "e", l: 0.24, m: 0.62, s: 0, v: 7.1, t: 1.5e8, data: 0, e: 0, a: 0.18, p: 101325 },
-            "Punched Card (Standard)": { c: "e", l: 0.187, m: 0.002, s: 0, v: 0.003, t: 1.5e9, data: 0.00008, e: 3e4, a: 0.015, p: 101325 },
-            "Floppy Disk (5.25in)": { c: "e", l: 0.133, m: 0.018, s: 0, v: 0.02, t: 6.3e8, data: 1.44, e: 3e5, a: 0.017, p: 101325 },
-            "Standard Tablespoon": { c: "e", l: 0.15, m: 0.03, s: 0, v: 0.015, t: 1.5e10, data: 0, e: 0, a: 0.006, p: 101325 },
+            "Spaghetti Noodle": { c: "e", l: 0.26, m: 0.001, s: 0, v: 0.001, t: 6.3e7, data: 0, e: 1.5e4, a: 0.0016, p: 101325, pain: 0 },
+            "Standard Pencil": { c: "e", l: 0.19, m: 0.006, s: 0, v: 0.008, t: 1.5e8, data: 0, e: 1e5, a: 0.004, p: 101325, pain: 0 },
+            "A4 Paper Sheet": { c: "e", l: 0.297, m: 0.005, s: 0, v: 0.006, t: 3.1e8, data: 0.003, e: 8e4, a: 0.06237, p: 101325, pain: 0 },
+            "US Letter Paper Sheet": { c: "e", l: 0.2794, m: 0.0045, s: 0, v: 0.0055, t: 3.1e8, data: 0.003, e: 7.2e4, a: 0.0603, p: 101325, pain: 0 },
+            "Credit Card": { c: "e", l: 0.0856, m: 0.005, s: 0, v: 0.004, t: 1.5e8, data: 0.0001, e: 2e5, a: 0.0046, p: 101325, pain: 0 },
+            "Golf Ball": { c: "e", l: 0.04267, m: 0.0459, s: 0, v: 0.04, t: 3.1e8, data: 0, e: 0, a: 0.0057, p: 101325, pain: 0 },
+            "Tennis Ball": { c: "e", l: 0.067, m: 0.058, s: 0, v: 0.15, t: 1.5e8, data: 0, e: 0, a: 0.014, p: 101325, pain: 0 },
+            "Basketball": { c: "e", l: 0.24, m: 0.62, s: 0, v: 7.1, t: 1.5e8, data: 0, e: 0, a: 0.18, p: 101325, pain: 0 },
+            "Punched Card (Standard)": { c: "e", l: 0.187, m: 0.002, s: 0, v: 0.003, t: 1.5e9, data: 0.00008, e: 3e4, a: 0.015, p: 101325, pain: 0 },
+            "Standard Tablespoon": { c: "e", l: 0.15, m: 0.03, s: 0, v: 0.015, t: 1.5e10, data: 0, e: 0, a: 0.006, p: 101325, pain: 0 },
+            "Grain of Sand": { c: "e", l: 0.002, m: 0.00005, s: 0, v: 0.00005, t: 1.5e14, data: 0.001, e: 0.001, a: 0.000012, p: 101325, pain: 0 },
+            "Standard AA Battery": { c: "e", l: 0.05, m: 0.023, s: 0, v: 0.008, t: 1.5e8, data: 0, e: 10000, a: 0.002, p: 101325, pain: 0 },
+            "A Single Penny": { c: "e", l: 0.019, m: 0.0025, s: 0, v: 0.0003, t: 1.5e9, data: 0, e: 0, a: 0.00057, p: 101325, pain: 0 },
+            "A Paperclip": { c: "e", l: 0.03, m: 0.001, s: 0, v: 0.0001, t: 3.1e9, data: 0, e: 0, a: 0.0002, p: 101325, pain: 0 },
             
             // Cosmic, Geographic & Environmental
-            "The Earth": { c: "e", l: 12742000, m: 5.97e24, s: 29780, v: 1.08e24, t: 1.4e17, data: 1e24, e: 2.6e33, a: 5.1e14, p: 101325 },
-            "The Sun": { c: "e", l: 1.39e9, m: 1.98e30, s: 220000, v: 1.41e30, t: 3.1e17, data: 1e28, e: 3.8e26, a: 6.09e18, p: 2.6e16 },
-            "The Moon": { c: "e", l: 3474800, m: 7.34e22, s: 1022, v: 2.19e19, t: 1.4e17, data: 1e22, e: 3.8e28, a: 3.79e13, p: 3e-10 },
-            "Jupiter": { c: "e", l: 1.39e8, m: 1.89e27, s: 13070, v: 1.43e27, t: 1.4e17, data: 1e26, e: 1.6e35, a: 6.14e16, p: 1e8 },
-            "Mercury": { c: "e", l: 4879400, m: 3.3e23, s: 47360, v: 6.08e19, t: 1.4e17, data: 1e21, e: 1e30, a: 7.48e13, p: 1e-9 },
-            "Venus": { c: "e", l: 12103600, m: 4.87e24, s: 35020, v: 9.28e23, t: 1.4e17, data: 1e23, e: 1e33, a: 4.6e14, p: 9300000 },
-            "Mars": { c: "e", l: 6779000, m: 6.39e23, s: 24070, v: 1.63e20, t: 1.4e17, data: 1e22, e: 1e31, a: 1.44e14, p: 610 },
-            "Saturn": { c: "e", l: 1.16e8, m: 5.68e26, s: 9680, v: 8.27e26, t: 1.4e17, data: 1e25, e: 1e34, a: 4.27e16, p: 1e8 },
-            "Uranus": { c: "e", l: 50724000, m: 8.68e25, s: 6800, v: 6.83e25, t: 1.4e17, data: 1e24, e: 1e33, a: 8.1e15, p: 1e8 },
-            "Neptune": { c: "e", l: 49244000, m: 1.02e26, s: 5430, v: 6.25e25, t: 1.4e17, data: 1e24, e: 1e33, a: 7.6e15, p: 1e8 },
-            "Pluto": { c: "e", l: 2376600, m: 1.3e22, s: 4740, v: 7e18, t: 1.4e17, data: 1e20, e: 1e28, a: 1.77e13, p: 1 },
-            "Milky Way Galaxy": { c: "e", l: 1e21, m: 3e42, s: 2.1e6, v: 3e60, t: 4.3e17, data: 1e40, e: 1e50, a: 1e42, p: 1e-15 },
-            "The Observable Universe": { c: "e", l: 8.8e26, m: 1.5e53, s: 0, v: 3.5e80, t: 4.3e17, data: 1e70, e: 1.3e69, a: 2.4e54, p: 1e-20 },
-            "State of Texas": { c: "e", l: 1270000, m: 5.6e19, s: 0, v: 2.08e19, t: 1.4e17, data: 1e16, e: 0, a: 6.95e11, p: 101325 },
-            "State of Rhode Island": { c: "e", l: 77000, m: 2.8e17, s: 0, v: 1.0e17, t: 1.4e17, data: 1e14, e: 0, a: 3.14e9, p: 101325 },
-            "Wales": { c: "e", l: 274000, m: 1.8e18, s: 0, v: 6e17, t: 1.4e17, data: 1e15, e: 0, a: 2.07e10, p: 101325 },
-            "Country of Canada": { c: "e", l: 5500000, m: 1e20, s: 0, v: 1e20, t: 1.4e17, data: 1e17, e: 0, a: 9.98e12, p: 101325 },
-            "Country of Russia": { c: "e", l: 9000000, m: 1.5e20, s: 0, v: 1.5e20, t: 1.4e17, data: 1e17, e: 0, a: 1.7e13, p: 101325 },
-            "Vatican City": { c: "e", l: 1000, m: 1e10, s: 0, v: 1e10, t: 1e11, data: 1e15, e: 0, a: 440000, p: 101325 },
-            "Sahara Desert": { c: "e", l: 4800000, m: 1e19, s: 0, v: 1e19, t: 1.4e17, data: 1e16, e: 0, a: 9.2e12, p: 101325 },
-            "Soccer Pitch (FIFA)": { c: "e", l: 105, m: 1.2e6, s: 0, v: 4.2e6, t: 1.5e9, data: 10, e: 0, a: 7140, p: 101325 },
-            "Olympic Swimming Pool": { c: "e", l: 50, m: 2.5e6, s: 0, v: 2.5e6, t: 1.5e9, data: 20, e: 0, a: 1250, p: 101325 },
-            "The Pacific Ocean": { c: "e", l: 1.9e7, m: 7.1e20, s: 1.5, v: 7.1e20, t: 1.4e17, data: 1e20, e: 8.0e20, a: 1.65e14, p: 101325 },
-            "Hurricane Katrina": { c: "e", l: 6.4e5, m: 3.0e14, s: 78, v: 2.5e14, t: 6.9e5, data: 1e12, e: 6.0e14, a: 1.3e11, p: 90200 },
-            "Typical Cumulus Cloud": { c: "e", l: 1000, m: 5.0e5, s: 15, v: 1.0e12, t: 3600, data: 1e6, e: 5.6e7, a: 1e6, p: 101000 },
-            "Chicxulub Asteroid (Dino Killer)": { c: "e", l: 10000, m: 4.6e15, s: 20000, v: 5.2e14, t: 1.4e17, data: 1e14, e: 4.2e23, a: 3.1e8, p: 0 },
-            "5-Megaton Nuclear Explosion": { c: "e", l: 6000, m: 0, s: 300, v: 1.1e11, t: 10, data: 1e5, e: 2.09e16, a: 1.1e8, p: 1e8 },
-            "Lightning Bolt": { c: "e", l: 5000, m: 0.0001, s: 100000, v: 10000, t: 0.0002, data: 1, e: 1.0e9, a: 50, p: 101325 },
+            "The Earth": { c: "e", l: 12742000, m: 5.97e24, s: 29780, v: 1.08e24, t: 1.4e17, data: 1e24, e: 2.6e33, a: 5.1e14, p: 101325, pain: 0 },
+            "The Sun": { c: "e", l: 1.39e9, m: 1.98e30, s: 220000, v: 1.41e30, t: 3.1e17, data: 1e28, e: 3.8e26, a: 6.09e18, p: 2.6e16, pain: 0 },
+            "The Moon": { c: "e", l: 3474800, m: 7.34e22, s: 1022, v: 2.19e19, t: 1.4e17, data: 1e22, e: 3.8e28, a: 3.79e13, p: 3e-10, pain: 0 },
+            "Jupiter": { c: "e", l: 1.39e8, m: 1.89e27, s: 13070, v: 1.43e27, t: 1.4e17, data: 1e26, e: 1.6e35, a: 6.14e16, p: 1e8, pain: 0 },
+            "Mercury": { c: "e", l: 4879400, m: 3.3e23, s: 47360, v: 6.08e19, t: 1.4e17, data: 1e21, e: 1e30, a: 7.48e13, p: 1e-9, pain: 0 },
+            "Venus": { c: "e", l: 12103600, m: 4.87e24, s: 35020, v: 9.28e23, t: 1.4e17, data: 1e23, e: 1e33, a: 4.6e14, p: 9300000, pain: 0 },
+            "Mars": { c: "e", l: 6779000, m: 6.39e23, s: 24070, v: 1.63e20, t: 1.4e17, data: 1e22, e: 1e31, a: 1.44e14, p: 610, pain: 0 },
+            "Saturn": { c: "e", l: 1.16e8, m: 5.68e26, s: 9680, v: 8.27e26, t: 1.4e17, data: 1e25, e: 1e34, a: 4.27e16, p: 1e8, pain: 0 },
+            "Uranus": { c: "e", l: 50724000, m: 8.68e25, s: 6800, v: 6.83e25, t: 1.4e17, data: 1e24, e: 1e33, a: 8.1e15, p: 1e8, pain: 0 },
+            "Neptune": { c: "e", l: 49244000, m: 1.02e26, s: 5430, v: 6.25e25, t: 1.4e17, data: 1e24, e: 1e33, a: 7.6e15, p: 1e8, pain: 0 },
+            "Pluto": { c: "e", l: 2376600, m: 1.3e22, s: 4740, v: 7e18, t: 1.4e17, data: 1e20, e: 1e28, a: 1.77e13, p: 1, pain: 0 },
+            "Milky Way Galaxy": { c: "e", l: 1e21, m: 3e42, s: 2.1e6, v: 3e60, t: 4.3e17, data: 1e40, e: 1e50, a: 1e42, p: 1e-15, pain: 0 },
+            "Andromeda Galaxy": { c: "e", l: 2e21, m: 1e43, s: 3e5, v: 1e61, t: 4.3e17, data: 1e41, e: 2e50, a: 3e42, p: 1e-15, pain: 0 },
+            "Sirius (Star)": { c: "e", l: 2.4e9, m: 4e30, s: 2e5, v: 6e30, t: 1e16, data: 1e28, e: 1e28, a: 1.8e19, p: 3e16, pain: 0 },
+            "Betelgeuse": { c: "e", l: 1.2e12, m: 3e31, s: 3e4, v: 1e39, t: 2.5e14, data: 1e30, e: 1e31, a: 4.5e24, p: 1e12, pain: 0 },
+            "The Observable Universe": { c: "e", l: 8.8e26, m: 1.5e53, s: 0, v: 3.5e80, t: 4.3e17, data: 1e70, e: 1.3e69, a: 2.4e54, p: 1e-20, pain: 0 },
+            "State of Texas": { c: "e", l: 1270000, m: 5.6e19, s: 0, v: 2.08e19, t: 1.4e17, data: 1e16, e: 0, a: 6.95e11, p: 101325, pain: 0 },
+            "State of Rhode Island": { c: "e", l: 77000, m: 2.8e17, s: 0, v: 1.0e17, t: 1.4e17, data: 1e14, e: 0, a: 3.14e9, p: 101325, pain: 0 },
+            "Wales": { c: "e", l: 274000, m: 1.8e18, s: 0, v: 6e17, t: 1.4e17, data: 1e15, e: 0, a: 2.07e10, p: 101325, pain: 0 },
+            "Country of Canada": { c: "e", l: 5500000, m: 1e20, s: 0, v: 1e20, t: 1.4e17, data: 1e17, e: 0, a: 9.98e12, p: 101325, pain: 0 },
+            "Country of Russia": { c: "e", l: 9000000, m: 1.5e20, s: 0, v: 1.5e20, t: 1.4e17, data: 1e17, e: 0, a: 1.7e13, p: 101325, pain: 0 },
+            "Vatican City": { c: "e", l: 1000, m: 1e10, s: 0, v: 1e10, t: 1e11, data: 1e15, e: 0, a: 440000, p: 101325, pain: 0 },
+            "Sahara Desert": { c: "e", l: 4800000, m: 1e19, s: 0, v: 1e19, t: 1.4e17, data: 1e16, e: 0, a: 9.2e12, p: 101325, pain: 0 },
+            "Soccer Pitch (FIFA)": { c: "e", l: 105, m: 1.2e6, s: 0, v: 4.2e6, t: 1.5e9, data: 10, e: 0, a: 7140, p: 101325, pain: 0 },
+            "Olympic Swimming Pool": { c: "e", l: 50, m: 2.5e6, s: 0, v: 2.5e6, t: 1.5e9, data: 20, e: 0, a: 1250, p: 101325, pain: 0 },
+            "The Pacific Ocean": { c: "e", l: 1.9e7, m: 7.1e20, s: 1.5, v: 7.1e20, t: 1.4e17, data: 1e20, e: 8.0e20, a: 1.65e14, p: 101325, pain: 0 },
+            "Mariana Trench": { c: "e", l: 10984, m: 1e18, s: 0, v: 1e18, t: 1.4e17, data: 1e15, e: 0, a: 4e11, p: 1.08e8, pain: 0 },
+            "Hurricane Katrina": { c: "e", l: 6.4e5, m: 3.0e14, s: 78, v: 2.5e14, t: 6.9e5, data: 1e12, e: 6.0e14, a: 1.3e11, p: 90200, pain: 0 },
+            "Typical Cumulus Cloud": { c: "e", l: 1000, m: 5.0e5, s: 15, v: 1.0e12, t: 3600, data: 1e6, e: 5.6e7, a: 1e6, p: 101000, pain: 0 },
+            "Chicxulub Asteroid (Dino Killer)": { c: "e", l: 10000, m: 4.6e15, s: 20000, v: 5.2e14, t: 1.4e17, data: 1e14, e: 4.2e23, a: 3.1e8, p: 0, pain: 0 },
+            "5-Megaton Nuclear Explosion": { c: "e", l: 6000, m: 0, s: 300, v: 1.1e11, t: 10, data: 1e5, e: 2.09e16, a: 1.1e8, p: 1e8, pain: 0 },
+            "Lightning Bolt": { c: "e", l: 5000, m: 0.0001, s: 100000, v: 10000, t: 0.0002, data: 1, e: 1.0e9, a: 50, p: 101325, pain: 0 },
             
-            // Everyday Micro & Random
-            "Grain of Sand": { c: "e", l: 0.002, m: 0.00005, s: 0, v: 0.00005, t: 1.5e14, data: 0.001, e: 0.001, a: 0.000012, p: 101325 },
-            "Standard AA Battery": { c: "e", l: 0.05, m: 0.023, s: 0, v: 0.008, t: 1.5e8, data: 0, e: 10000, a: 0.002, p: 101325 },
-            "A Single Penny": { c: "e", l: 0.019, m: 0.0025, s: 0, v: 0.0003, t: 1.5e9, data: 0, e: 0, a: 0.00057, p: 101325 },
-            "A Paperclip": { c: "e", l: 0.03, m: 0.001, s: 0, v: 0.0001, t: 3.1e9, data: 0, e: 0, a: 0.0002, p: 101325 }
+            // Pain Benchmarks
+            "Bee Sting (Schmidt Scale)": { c: "e", l: 0.001, m: 0.0001, s: 5, v: 0.0001, t: 3600, data: 0, e: 1, a: 0.00001, p: 200000, pain: 2 },
+            "Wasp Sting": { c: "e", l: 0.002, m: 0.0001, s: 5, v: 0.0001, t: 7200, data: 0, e: 1, a: 0.00001, p: 200000, pain: 2 },
+            "Tarantula Hawk Sting": { c: "e", l: 0.003, m: 0.0003, s: 3, v: 0.0003, t: 86400, data: 0, e: 6, a: 0.00003, p: 300000, pain: 4 },
+            "Bullet Ant Sting": { c: "e", l: 0.002, m: 0.0002, s: 2, v: 0.0002, t: 86400, data: 0, e: 5, a: 0.00002, p: 300000, pain: 4 },
+            "Childbirth (Average)": { c: "e", l: 0, m: 0, s: 0, v: 0, t: 28800, data: 0, e: 1e6, a: 0, p: 0, pain: 8 },
+            "Stubbed Toe": { c: "e", l: 0.05, m: 0, s: 4, v: 0, t: 300, data: 0, e: 10, a: 0, p: 50000, pain: 1.5 },
+            "Stepping on a Lego": { c: "e", l: 0.03, m: 0.002, s: 0, v: 0.005, t: 1e9, data: 0, e: 0, a: 0.0009, p: 101325, pain: 3 },
+            "Paper Cut": { c: "e", l: 0.02, m: 0, s: 0.01, v: 0, t: 172800, data: 0, e: 0, a: 0.0001, p: 0, pain: 1.2 },
+            "Brain Freeze (Ice Cream Headache)": { c: "e", l: 0, m: 0, s: 0, v: 0, t: 30, data: 0, e: 0, a: 0, p: 0, pain: 2.5 },
+            "Kidney Stone": { c: "e", l: 0.005, m: 0.001, s: 0, v: 0.0005, t: 604800, data: 0, e: 0, a: 0.0001, p: 0, pain: 9 },
+            "Sunburn (Severe)": { c: "e", l: 0.5, m: 0, s: 0, v: 0, t: 432000, data: 0, e: 5000, a: 0.5, p: 0, pain: 4 }
         };
 
-        // --- UNIVERSAL JOULE BRIDGE ---
-        // This matrix allows any dimension to be translated into Energy (Joules), and then back into any other dimension.
-        // It ensures no mathematical combination ever fails.
+        // --- HUMAN-SCALE UNIVERSAL MATRIX ---
+        // Prevents the "E=mc^2" explosion where 1 fluid ounce becomes 10^16 fingers.
+        // Instead, links dimensions via relatable human physics: 
+        // 1 kg (Mass) = 1000 kcal (Energy) = 4.184e6 J
+        // 1 meter (Length) = 100 J (Physical work pushing 10kg)
+        // 1 second (Time) = 100 J (Resting metabolic rate)
         const bridgeToJoules = {
             'e': (val) => val,
-            'm': (val) => val * Math.pow(299792458, 2), // E = mc^2
-            'l': (val) => val * 1, // Assume 1 Newton force -> E = F * d
-            't': (val) => (val * 299792458) * 1, // t -> distance -> energy
-            's': (val) => 0.5 * 1 * Math.pow(val, 2), // KE = 1/2 mv^2 (assuming 1kg mass)
-            'v': (val) => val * Math.pow(299792458, 2), // 1L = 1kg water -> E=mc^2
-            'a': (val) => Math.sqrt(val) * 1, // Area -> length -> energy
-            'data': (val) => val * 1e-6, // Arbitrary data-energy bridge
-            'p': (val) => val * 1 // 1 Pa = 1 J/m^3
+            'm': (val) => val * 4.184e6, 
+            'l': (val) => val * 100, 
+            't': (val) => val * 100, 
+            's': (val) => 0.5 * 100 * Math.pow(val, 2), // KE of 100kg object
+            'v': (val) => val * 4.184e6, // 1L water = 1kg mass
+            'a': (val) => val * 1000, // Solar irradiance 1m^2
+            'data': (val) => val * 1, // 1MB = 1J transmission
+            'p': (val) => val * 1, 
+            'pain': (val) => val * 10 // 1 Dol = 10J stimulus
         };
 
         const bridgeFromJoules = {
             'e': (val) => val,
-            'm': (val) => val / Math.pow(299792458, 2),
-            'l': (val) => val / 1,
-            't': (val) => (val / 1) / 299792458,
-            's': (val) => Math.sqrt(val * 2), // Assumes 1kg mass
-            'v': (val) => val / Math.pow(299792458, 2),
-            'a': (val) => Math.pow((val / 1), 2),
-            'data': (val) => val * 1e6,
-            'p': (val) => val / 1
+            'm': (val) => val / 4.184e6,
+            'l': (val) => val / 100,
+            't': (val) => val / 100,
+            's': (val) => Math.sqrt(Math.max(val / 50, 0)),
+            'v': (val) => val / 4.184e6,
+            'a': (val) => val / 1000,
+            'data': (val) => val / 1,
+            'p': (val) => val / 1,
+            'pain': (val) => val / 10
         };
 
         function runOmniConversion() {
@@ -606,34 +695,26 @@
 
             let resultHTML = "";
 
-            /* ------------------------------------------------------------------
-               Dynamic Formatting (No Sci Notation unless necessary)
-               ------------------------------------------------------------------ */
+            /* --- Dynamic Formatting --- */
             function formatVal(num) {
                 if (num === 0) return "0";
                 
                 let strNum = num.toString();
-                
-                // If JS auto-converts to scientific notation OR it's extremely long, format it cleanly
+                // Fall back to scientific ONLY if unreadable or extremely long
                 if (strNum.includes('e') || strNum.length > 15) {
-                    // Only fall back to scientific if it's truly unreadable or has > 8 zeroes
-                    if (num > 1e15 || num < 1e-8) {
+                    if (num > 1e12 || num < 1e-6) {
                         return num.toExponential(4);
                     } else {
-                        // Attempt to force fixed decimal
                         let fixed = num.toFixed(8);
-                        // Strip trailing zeros
                         return fixed.replace(/\.?0+$/, "");
                     }
                 }
-                
-                // For normal numbers, return up to 8 decimal places
                 let parsed = parseFloat(num.toPrecision(8));
                 return parsed.toString();
             }
 
             function getDimName(dimChar) {
-                const map = { 'l': "Length", 'm': "Mass", 't': "Time", 's': "Speed", 'v': "Volume", 'data': "Data Storage", 'e': "Energy", 'a': "Surface Area", 'p': "Pressure" };
+                const map = { 'l': "Length", 'm': "Mass", 't': "Time", 's': "Speed", 'v': "Volume", 'data': "Data Storage", 'e': "Energy", 'a': "Surface Area", 'p': "Pressure", 'pain': "Pain (Dols)" };
                 return map[dimChar] || "Dimension";
             }
 
@@ -642,23 +723,16 @@
             // ==================================================================
             if (fromObj.c === "u" && toObj.c === "u") {
                 if (fromObj.d === toObj.d) {
-                    // Exact match (e.g. Meters to Feet)
                     let calculated = (inputVal * fromObj.val) / toObj.val;
                     resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">${formatVal(calculated)} ${toKey}</b>`;
                 } else {
-                    // MISMATCH DIMENSIONS - Use Universal Joule Bridge
-                    let baseFrom = inputVal * fromObj.val; // Normalizes input to core base (kg, meters, etc)
-                    
-                    // 1. Convert Base 1 to Joules
+                    // Universal Matrix Bridge
+                    let baseFrom = inputVal * fromObj.val; 
                     let energyJoules = bridgeToJoules[fromObj.d](baseFrom);
-                    
-                    // 2. Convert Joules to Base 2
                     let targetBaseVal = bridgeFromJoules[toObj.d](energyJoules);
-                    
-                    // 3. Convert Base 2 to Target Unit
                     let finalVal = targetBaseVal / toObj.val;
 
-                    resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">${formatVal(finalVal)} ${toKey}</b><br><span class="warning-text">THEORETICAL MATRIX ACTIVE: Translated ${getDimName(fromObj.d)} into universal energy (Joules) and converted back to ${getDimName(toObj.d)}. The result may be inaccurate.</span>`;
+                    resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">${formatVal(finalVal)} ${toKey}</b><br><span class="warning-text">THEORETICAL BRIDGE ACTIVE: Cross-Dimensional Translation.</span><span class="bridge-text">Translated ${getDimName(fromObj.d)} into universal energy (Joules) via Human-Scale Equivalents (e.g. 1 second = 100 Joules resting metabolic rate), then converted to ${getDimName(toObj.d)}. Accuracy cannot be proven.</span>`;
                 }
             }
             
@@ -669,7 +743,9 @@
                 let targetDimension = toObj.d;
                 let entityBaseVal = fromObj[targetDimension];
                 
-                if (targetDimension === 's' && entityBaseVal === 0) {
+                if (entityBaseVal === undefined) entityBaseVal = 0;
+
+                if (targetDimension === 's' && entityBaseVal <= 1e-10) {
                     resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">0 ${toKey}</b><br><span class="warning-text">Note: ${fromKey} is stationary relative to the Earth's surface. Its speed is 0.</span>`;
                 } else {
                     let calculated = (inputVal * entityBaseVal) / toObj.val;
@@ -684,8 +760,10 @@
                 let targetDimension = fromObj.d;
                 let entityBaseVal = toObj[targetDimension];
 
-                if (targetDimension === 's' && entityBaseVal === 0) {
-                    resultHTML = `<span class="warning-text">Error: Cannot divide by zero.</span><br><span class="bridge-text">The entity <b>"${toKey}"</b> is stationary. It does not possess measurable <b>Speed</b> for this comparison.</span>`;
+                if (entityBaseVal === undefined) entityBaseVal = 0;
+
+                if (entityBaseVal <= 1e-10) {
+                    resultHTML = `<span class="warning-text">Error: Cannot divide by zero.</span><br><span class="bridge-text">The entity <b>"${toKey}"</b> lacks a meaningful measurement for <b>${getDimName(targetDimension)}</b>, making comparison impossible.</span>`;
                 } else {
                     let calculated = (inputVal * fromObj.val) / entityBaseVal;
                     resultHTML = `<b>${inputVal} ${fromKey}</b> <br>equals<br> <b style="font-size: 32px;">${formatVal(calculated)} ${toKey}s</b><br><span class="bridge-text">(Comparing your input to the standard ${getDimName(targetDimension)} of ${toKey}.)</span>`;
@@ -700,24 +778,25 @@
                     resultHTML = `Comparing 1 ${fromKey} to 1 ${toKey} results in a perfect 1:1 existential match.`;
                 } else {
                     resultHTML = `Comparing <b>${inputVal} ${fromKey}</b> vs <b>1 ${toKey}</b>:<br><br><ul style="text-align:left; font-size:18px; line-height: 1.8; margin: 0 auto; display: inline-block;">`;
-                    let allDimensions = ['l', 'm', 's', 'v', 't', 'data', 'e', 'a', 'p'];
+                    let allDimensions = ['l', 'm', 's', 'v', 't', 'data', 'e', 'a', 'p', 'pain'];
                     let warningAdded = false;
+                    let foundSharedDim = false;
                     
                     allDimensions.forEach(function(dim) {
-                        let fromVal = fromObj[dim];
-                        let toVal = toObj[dim];
+                        let fromVal = fromObj[dim] || 0;
+                        let toVal = toObj[dim] || 0;
 
-                        if (toVal > 0) {
+                        if (toVal > 1e-10) {
+                            foundSharedDim = true;
                             let calculated = (inputVal * fromVal) / toVal;
                             resultHTML += `<li><strong>${getDimName(dim)}:</strong> Equivalent to ${formatVal(calculated)} ${toKey}s.</li>`;
-                        } else if (fromVal > 0 && toVal === 0) {
+                        } else if (fromVal > 1e-10 && toVal <= 1e-10) {
                             warningAdded = true;
                             resultHTML += `<li><strong style="color:#d9534f;">${getDimName(dim)}:</strong> 0 (Cannot compare, ${toKey} lacks this dimension).</li>`;
-                        } else {
-                            resultHTML += `<li><strong style="color:#777;">${getDimName(dim)}:</strong> 0 (Neither possess this property).</li>`;
                         }
                     });
                     
+                    if (!foundSharedDim) resultHTML += "<li>No shared physical dimensions found to compare.</li>";
                     resultHTML += "</ul>";
 
                     if(warningAdded) {
